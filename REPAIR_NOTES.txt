@@ -1,0 +1,21 @@
+AREStyx — Final Stabilization Notes
+Baseline: AREStyx_FIXED_Stage_3_3.zip
+
+This build was extended from the supplied Stage 3.3 baseline; it was not rebuilt from scratch.
+
+Completed:
+1. Preserved the Stage 3.3 layout, navigation, navy/cyan visual language, and existing tool engine.
+2. Replaced legacy/fallback logo usage with the final AREStyx circuit-A asset for header, tools page, favicon, PWA and manifest icons.
+3. Uses the official ARESTER GROUP logo asset in visual "Powered by" sections.
+4. Uses the supplied DANA Business QRIS image byte-for-byte unchanged inside a responsive donation card.
+5. Expanded the catalog to 110 unique tool IDs across calculator, converter, text, image, developer, generator, finance and engineering categories.
+6. Connected all 110 catalog IDs to real runner implementations; no catalog entry falls through to Coming Soon.
+7. Removed dynamic JavaScript expression execution from the main calculator and replaced it with a safe arithmetic parser.
+8. Added PWA manifest, service-worker registration, offline app-shell caching, final icons and a padded maskable icon.
+9. Added strict security headers for Vercel and _headers-compatible static hosting without unsafe-inline or unsafe-eval.
+10. Added SEO metadata, Open Graph/Twitter metadata, robots.txt, accessibility/CLS improvements and mobile donation styling.
+11. Added About AREStyx copy and donation section.
+12. Kept the project static: no Node build step and no third-party runtime dependencies are required.
+
+Priority applied:
+Stability > Security > Functional Tool Count > Performance > SEO > Visual polish.

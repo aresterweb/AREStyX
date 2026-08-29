@@ -1,0 +1,51 @@
+{
+  "name": "AREStyx - Free Online Tools",
+  "short_name": "AREStyx",
+  "description": "110+ free online tools for calculators, converters, text, image, developer, finance, generators and engineering.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020817",
+  "theme_color": "#07111f",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "assets/arestyx-logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/arestyx-logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/arestyx-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Calculator",
+      "short_name": "Calculator",
+      "url": "tools/tools.html?tool=calculator"
+    },
+    {
+      "name": "Unit Converter",
+      "short_name": "Converter",
+      "url": "tools/tools.html?tool=unit-converter"
+    },
+    {
+      "name": "Engineering Tools",
+      "short_name": "Engineering",
+      "url": "index.html#allTools"
+    }
+  ],
+  "id": "./",
+  "lang": "id",
+  "dir": "ltr"
+}
