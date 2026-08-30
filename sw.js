@@ -14,7 +14,7 @@ const APP_SHELL = [
     "./assets/arestyx-logo-192.png",
     "./assets/arestyx-logo-512.png",
     "./assets/arestyx-maskable-512.png",
-    "./assets/favicon-64.png",
+    "./favicon.png",
     "./assets/arester-group-official.png",
     "./assets/dana-business-qris.jpg",
     "./tools/tools.html",
