@@ -1,5 +1,3 @@
-/* AREStyx Stage 4 extensions — functional tools beyond Stage 3.3 baseline. */
-(function () {
 "use strict";
 const impl = Object.create(null);
 const catalog = Array.isArray(window.AREStyxToolCatalog) ? window.AREStyxToolCatalog : [];
@@ -20,11 +18,13 @@ function form(fields,compute,label="Hitung",note=""){
 function textTool(transform,label="Proses",extras=[]){form([{id:"text",label:"Teks",type:"textarea",full:true},...extras],()=>({value:transform(get("text")),detail:"Hasil siap disalin."}),label);}
 function add(id,fn){impl[id]=fn;}
 
+
 /* calculator extensions */
 add("fraction-calculator",()=>form([{id:"n1",label:"Pembilang 1",value:1},{id:"d1",label:"Penyebut 1",value:2},{id:"op",label:"Operasi",type:"select",options:["+","-","×","÷"]},{id:"n2",label:"Pembilang 2",value:1},{id:"d2",label:"Penyebut 2",value:3}],()=>{let a=int("n1"),b=int("d1"),c=int("n2"),d=int("d2"),n,q;if(!b||!d)throw new Error("Penyebut tidak boleh 0.");switch(get("op")){case"+":n=a*d+c*b;q=b*d;break;case"-":n=a*d-c*b;q=b*d;break;case"×":n=a*c;q=b*d;break;default:if(!c)throw new Error("Tidak dapat membagi dengan pecahan nol.");n=a*d;q=b*c;}if(q<0){n=-n;q=-q;}const g=gcd2(n,q)||1;return{value:`${n/g}/${q/g}`,detail:`Desimal ${fmt((n/g)/(q/g))}`};}));
 add("gcd-lcm-calculator",()=>form([{id:"a",label:"Bilangan A",value:24},{id:"b",label:"Bilangan B",value:36}],()=>{const a=int("a"),b=int("b"),g=gcd2(a,b),l=a===0||b===0?0:Math.abs(a*b)/g;return{value:`FPB ${g}`,detail:`KPK ${fmt(l,0)}`};}));
 add("median-calculator",()=>form([{id:"text",label:"Daftar angka",type:"textarea",full:true,value:"1, 3, 5, 7"}],()=>{const a=list(get("text")).sort((x,y)=>x-y),m=Math.floor(a.length/2),v=a.length%2?a[m]:(a[m-1]+a[m])/2;return{value:fmt(v),detail:`${a.length} data`};}));
 add("standard-deviation-calculator",()=>form([{id:"text",label:"Daftar angka",type:"textarea",full:true,value:"2,4,4,4,5,5,7,9"}],()=>{const a=list(get("text")),mean=a.reduce((x,y)=>x+y,0)/a.length,pop=Math.sqrt(a.reduce((s,x)=>s+(x-mean)**2,0)/a.length),sample=a.length>1?Math.sqrt(a.reduce((s,x)=>s+(x-mean)**2,0)/(a.length-1)):0;return{value:`σ ${fmt(pop,4)}`,detail:`s ${fmt(sample,4)} • mean ${fmt(mean,4)}`};}));
+
 
 /* converter extensions */
 const conv={
@@ -38,6 +38,7 @@ const conv={
 "flow-rate-converter":{Ls:["L/s",1],Lmin:["L/min",1/60],m3s:["m³/s",1000],m3h:["m³/h",1000/3600],gpm:["US gpm",3.785411784/60]}
 };
 Object.entries(conv).forEach(([id,u])=>add(id,()=>{const opts=Object.entries(u).map(([v,[label]])=>({value:v,label}));form([{id:"x",label:"Nilai",value:1},{id:"from",label:"Dari",type:"select",options:opts},{id:"to",label:"Ke",type:"select",options:opts.map((o,i)=>({...o,selected:i===1}))}],()=>{const a=u[get("from")],b=u[get("to")];return{value:fmt(num("x")*a[1]/b[1]),detail:`${a[0]} → ${b[0]}`};},"Konversi");}));
+
 
 /* text extensions */
 add("character-counter",()=>textTool(t=>`${t.length} karakter • ${t.replace(/\s/g,"").length} tanpa spasi`,"Hitung"));
@@ -54,6 +55,7 @@ add("email-extractor",()=>textTool(t=>[...new Set(t.match(/[A-Z0-9._%+-]+@[A-Z0-
 add("url-extractor",()=>textTool(t=>[...new Set(t.match(/https?:\/\/[^\s<>"']+/gi)||[])].join("\n")));
 add("blank-line-remover",()=>textTool(t=>t.split(/\r?\n/).filter(x=>x.trim()).join("\n")));
 
+
 /* image tools */
 function imageForm(extra=""){
  const w=$("toolWorkspace");w.innerHTML=`<div class="tool-form-grid">${field({id:"img",label:"Pilih gambar",type:"file",accept:"image/*",full:true})}${extra}</div><div class="tool-action-row"><button id="imgRun" class="tool-button tool-button-primary" type="button">Proses</button></div><div id="imgWrap" class="image-preview-wrap" hidden><img id="imgPreview" class="image-preview" alt="Preview hasil"><a id="imgDownload" class="tool-button tool-button-secondary" download="arestyx-image.png">Unduh hasil</a></div><div class="tool-result"><span class="tool-result-label">HASIL</span><div id="imgValue" class="tool-result-value">-</div><div id="imgDetail" class="tool-result-detail"></div></div>`;
@@ -68,6 +70,7 @@ add("image-compressor",()=>{imageForm(field({id:"q",label:"Kualitas 1–100",val
 add("image-format-converter",()=>{imageForm(field({id:"type",label:"Format output",type:"select",options:[{value:"image/png",label:"PNG"},{value:"image/jpeg",label:"JPEG"},{value:"image/webp",label:"WebP"}]}));imageBind(async()=>{const {url,im}=await loadImage(),c=document.createElement("canvas");c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext("2d").drawImage(im,0,0);const type=get("type"),b=await blobCanvas(c,type,.92),ext=type.split("/")[1].replace("jpeg","jpg");await showBlob(b,`arestyx-converted.${ext}`);URL.revokeObjectURL(url);return{value:type,detail:`${fmt(b.size/1024,2)} KB`};});});
 add("image-grayscale",()=>{imageForm();imageBind(async()=>{const {url,im}=await loadImage(),c=document.createElement("canvas");c.width=im.naturalWidth;c.height=im.naturalHeight;const x=c.getContext("2d");x.drawImage(im,0,0);const d=x.getImageData(0,0,c.width,c.height);for(let i=0;i<d.data.length;i+=4){const g=.299*d.data[i]+.587*d.data[i+1]+.114*d.data[i+2];d.data[i]=d.data[i+1]=d.data[i+2]=g;}x.putImageData(d,0,0);const b=await blobCanvas(c);await showBlob(b,"arestyx-grayscale.png");URL.revokeObjectURL(url);return{value:"Grayscale selesai",detail:`${c.width} × ${c.height}px`};});});
 add("image-rotate",()=>{imageForm(field({id:"ang",label:"Sudut",type:"select",options:["90","180","270"]}));imageBind(async()=>{const {url,im}=await loadImage(),deg=Number(get("ang")),swap=deg!==180,c=document.createElement("canvas");c.width=swap?im.naturalHeight:im.naturalWidth;c.height=swap?im.naturalWidth:im.naturalHeight;const x=c.getContext("2d");x.translate(c.width/2,c.height/2);x.rotate(deg*Math.PI/180);x.drawImage(im,-im.naturalWidth/2,-im.naturalHeight/2);const b=await blobCanvas(c);await showBlob(b,"arestyx-rotated.png");URL.revokeObjectURL(url);return{value:`Diputar ${deg}°`,detail:`${c.width} × ${c.height}px`};});});
+
 
 /* developer tools */
 function toB64(s){const bytes=new TextEncoder().encode(s);let b="";bytes.forEach(x=>b+=String.fromCharCode(x));return btoa(b);}
@@ -91,6 +94,7 @@ function ipInt(ip){const p=ip.trim().split(".").map(Number);if(p.length!==4||p.s
 function intIp(n){n>>>=0;return[n>>>24,(n>>>16)&255,(n>>>8)&255,n&255].join(".");}
 add("ipv4-subnet-calculator",()=>form([{id:"ip",label:"IPv4",type:"text",value:"192.168.1.10"},{id:"cidr",label:"CIDR",value:24,min:0,max:32}],()=>{const ip=ipInt(get("ip")),c=int("cidr");if(c<0||c>32)throw new Error("CIDR harus 0–32.");const mask=c===0?0:(0xffffffff<<(32-c))>>>0,net=(ip&mask)>>>0,bc=(net|(~mask>>>0))>>>0,total=2**(32-c),usable=c>=31?(c===32?1:2):Math.max(total-2,0);return{value:`Network ${intIp(net)}/${c}`,detail:`Netmask ${intIp(mask)} • Broadcast ${intIp(bc)} • Host usable ${usable.toLocaleString("id-ID")}`};}));
 
+
 /* generators */
 function randInt(min,max){if(!Number.isSafeInteger(min)||!Number.isSafeInteger(max)||max<min)throw new Error("Rentang tidak valid.");const r=max-min+1;if(r<=0||r>0x100000000)throw new Error("Rentang terlalu besar.");const lim=Math.floor(0x100000000/r)*r,a=new Uint32Array(1);do{crypto.getRandomValues(a)}while(a[0]>=lim);return min+a[0]%r;}
 function randChars(chars,len){let out="";for(let i=0;i<len;i++)out+=chars[randInt(0,chars.length-1)];return out;}
@@ -102,6 +106,7 @@ const words=["anchor","azure","bravo","cobalt","delta","ember","fjord","galaxy",
 add("passphrase-generator",()=>form([{id:"count",label:"Jumlah kata",value:5,min:3,max:10},{id:"sep",label:"Pemisah",type:"select",options:["-","_",".","space"]}],()=>{const c=Math.min(10,Math.max(3,int("count"))),sep=get("sep")==="space"?" ":get("sep");return{value:Array.from({length:c},()=>words[randInt(0,words.length-1)]).join(sep),detail:`${c} kata`};},"Generate"));
 add("dice-roller",()=>form([{id:"dice",label:"Jumlah dadu",value:1,min:1,max:20},{id:"sides",label:"Sisi per dadu",value:6,min:2,max:1000}],()=>{const d=Math.min(20,Math.max(1,int("dice"))),s=Math.min(1000,Math.max(2,int("sides"))),r=Array.from({length:d},()=>randInt(1,s));return{value:`${r.join(" + ")} = ${r.reduce((a,b)=>a+b,0)}`,detail:`${d}d${s}`};},"Lempar"));
 add("coin-flip",()=>form([],()=>({value:randInt(0,1)?"Kepala":"Ekor",detail:"Web Crypto random"}),"Lempar Koin"));
+
 
 /* finance tools */
 add("loan-calculator",()=>form([{id:"p",label:"Pokok pinjaman",value:10000000,min:0},{id:"rate",label:"Bunga per tahun (%)",value:12,min:0},{id:"months",label:"Tenor (bulan)",value:12,min:1}],()=>{const p=num("p"),n=int("months"),r=num("rate")/1200;if(p<0||n<=0||r<0)throw new Error("Nilai tidak valid.");const pay=r===0?p/n:p*r/(1-(1+r)**(-n));return{value:`Rp ${fmt(pay,2)} / bulan`,detail:`Total Rp ${fmt(pay*n,2)} • bunga Rp ${fmt(pay*n-p,2)}`};},"Hitung","Estimasi matematis; biaya administrasi dan biaya produk finansial tidak dimasukkan."));
@@ -119,38 +124,29 @@ add("depreciation-calculator",()=>form([{id:"cost",label:"Harga perolehan",value
 add("tip-calculator",()=>form([{id:"bill",label:"Total tagihan",value:200000},{id:"tip",label:"Tip (%)",value:10},{id:"people",label:"Jumlah orang",value:2,min:1}],()=>{const b=num("bill"),t=b*num("tip")/100,p=int("people");if(p<=0)throw new Error("Jumlah orang harus > 0.");return{value:`${fmt((b+t)/p,2)} / orang`,detail:`Tip ${fmt(t,2)} • total ${fmt(b+t,2)}`};}));
 add("discount-stack-calculator",()=>form([{id:"price",label:"Harga awal",value:100000},{id:"d1",label:"Diskon 1 (%)",value:20},{id:"d2",label:"Diskon 2 (%)",value:10}],()=>{const p=num("price"),d1=num("d1"),d2=num("d2");if([d1,d2].some(x=>x<0||x>100))throw new Error("Diskon harus 0–100%.");const f=p*(1-d1/100)*(1-d2/100),eff=(1-f/p)*100;return{value:fmt(f,2),detail:`Diskon efektif ${fmt(eff,2)}% • hemat ${fmt(p-f,2)}`};}));
 
-/* engineering tools */
-add("electrical-power-calculator",()=>form([{id:"v",label:"Tegangan (V)",value:220},{id:"i",label:"Arus (A)",value:5}],()=>({value:`${fmt(num("v")*num("i"),3)} W`,detail:`${fmt(num("v")*num("i")/1000,4)} kW`})));
-add("series-resistance-calculator",()=>form([{id:"text",label:"Resistansi Ω",type:"textarea",full:true,value:"10, 20, 30"}],()=>{const a=list(get("text"));return{value:`${fmt(a.reduce((x,y)=>x+y,0))} Ω`,detail:`${a.length} resistor seri`};}));
-add("parallel-resistance-calculator",()=>form([{id:"text",label:"Resistansi Ω",type:"textarea",full:true,value:"10, 20, 30"}],()=>{const a=list(get("text"));if(a.some(x=>x<=0))throw new Error("Semua resistansi harus > 0.");return{value:`${fmt(1/a.reduce((s,x)=>s+1/x,0))} Ω`,detail:`${a.length} resistor paralel`};}));
-add("voltage-divider-calculator",()=>form([{id:"vin",label:"Vin (V)",value:12},{id:"r1",label:"R1 (Ω)",value:1000},{id:"r2",label:"R2 (Ω)",value:1000}],()=>{const r1=num("r1"),r2=num("r2");if(r1+r2===0)throw new Error("R1 + R2 tidak boleh 0.");return{value:`${fmt(num("vin")*r2/(r1+r2),4)} V`,detail:"Vout = Vin × R2 / (R1 + R2)"};}));
-add("battery-runtime-calculator",()=>form([{id:"capacity",label:"Kapasitas (Ah)",value:100,min:0},{id:"load",label:"Arus beban (A)",value:10,min:.001},{id:"eff",label:"Efisiensi usable (%)",value:85,min:1,max:100}],()=>{const l=num("load");if(l<=0)throw new Error("Arus beban harus > 0.");return{value:`${fmt(num("capacity")*(num("eff")/100)/l,3)} jam`,detail:"Estimasi ideal; kondisi nyata tergantung baterai dan beban."};}));
-add("transformer-calculator",()=>form([{id:"vp",label:"Tegangan primer (V)",value:220},{id:"np",label:"Lilitan primer",value:1000},{id:"ns",label:"Lilitan sekunder",value:100}],()=>{const np=num("np"),ns=num("ns");if(np===0||ns===0)throw new Error("Jumlah lilitan tidak boleh 0.");return{value:`Vs = ${fmt(num("vp")*ns/np,4)} V`,detail:`Rasio Np:Ns = ${fmt(np/ns,4)}:1`};}));
-add("period-frequency-calculator",()=>form([{id:"mode",label:"Diketahui",type:"select",options:["Frekuensi (Hz)","Periode (s)"]},{id:"x",label:"Nilai",value:50,min:.000000001}],()=>{const x=num("x");if(x<=0)throw new Error("Nilai harus > 0.");return get("mode").startsWith("Frekuensi")?{value:`T = ${fmt(1/x,9)} s`,detail:`${fmt(1000/x,6)} ms`}:{value:`f = ${fmt(1/x,6)} Hz`,detail:"f = 1 / T"};}));
-add("rpm-rads-converter",()=>form([{id:"mode",label:"Arah",type:"select",options:["RPM ke rad/s","rad/s ke RPM"]},{id:"x",label:"Nilai",value:1500}],()=>get("mode").startsWith("RPM")?{value:`${fmt(num("x")*2*Math.PI/60,6)} rad/s`,detail:"ω = RPM × 2π / 60"}:{value:`${fmt(num("x")*60/(2*Math.PI),6)} RPM`,detail:"RPM = ω × 60 / 2π"}));
-add("torque-power-calculator",()=>form([{id:"kw",label:"Daya (kW)",value:100},{id:"rpm",label:"RPM",value:1500,min:.001}],()=>{const rpm=num("rpm");if(rpm<=0)throw new Error("RPM harus > 0.");return{value:`${fmt(9550*num("kw")/rpm,3)} N·m`,detail:"T ≈ 9550 × kW / RPM"};}));
-add("gear-ratio-calculator",()=>form([{id:"driver",label:"Gigi penggerak",value:20,min:1},{id:"driven",label:"Gigi digerakkan",value:40,min:1},{id:"rpm",label:"RPM input",value:1000}],()=>{const a=num("driver"),b=num("driven");if(a<=0||b<=0)throw new Error("Jumlah gigi harus > 0.");return{value:`Rasio ${fmt(b/a,4)} : 1`,detail:`RPM output ${fmt(num("rpm")*a/b,3)}`};}));
-add("hydraulic-power-calculator",()=>form([{id:"bar",label:"Tekanan (bar)",value:100},{id:"lmin",label:"Debit (L/min)",value:60},{id:"eff",label:"Efisiensi (%)",value:100,min:1,max:100}],()=>({value:`${fmt(num("bar")*num("lmin")/600*num("eff")/100,3)} kW`,detail:"P(kW) = bar × L/min / 600 × η"})));
-add("pipe-velocity-calculator",()=>form([{id:"flow",label:"Debit (m³/h)",value:10},{id:"diameter",label:"Diameter dalam (mm)",value:50,min:.001}],()=>{const q=num("flow")/3600,d=num("diameter")/1000;if(d<=0)throw new Error("Diameter harus > 0.");return{value:`${fmt(q/(Math.PI*d*d/4),4)} m/s`,detail:"v = Q / A"};}));
-add("reynolds-number-calculator",()=>form([{id:"rho",label:"Densitas ρ (kg/m³)",value:1000},{id:"v",label:"Kecepatan (m/s)",value:1},{id:"d",label:"Diameter (m)",value:.05},{id:"mu",label:"Viskositas dinamis μ (Pa·s)",value:.001}],()=>{const mu=num("mu");if(mu<=0)throw new Error("Viskositas harus > 0.");const re=num("rho")*num("v")*num("d")/mu;return{value:`Re = ${fmt(re,2)}`,detail:re<2300?"Aliran cenderung laminar":re>4000?"Aliran cenderung turbulen":"Zona transisi"};}));
-add("pressure-head-calculator",()=>form([{id:"p",label:"Tekanan (kPa)",value:100},{id:"rho",label:"Densitas fluida (kg/m³)",value:1000,min:.001}],()=>{const rho=num("rho");if(rho<=0)throw new Error("Densitas harus > 0.");return{value:`${fmt(num("p")*1000/(rho*9.80665),4)} m`,detail:"h = P / (ρg)"};}));
-add("specific-gravity-calculator",()=>form([{id:"rho",label:"Densitas fluida (kg/m³)",value:850}],()=>({value:`SG = ${fmt(num("rho")/1000,5)}`,detail:"Referensi air = 1000 kg/m³"})));
-add("api-gravity-calculator",()=>form([{id:"api",label:"API gravity",value:35}],()=>{const sg=141.5/(num("api")+131.5),rho=sg*999.016;return{value:`SG ≈ ${fmt(sg,5)}`,detail:`Densitas perkiraan @15.6°C ≈ ${fmt(rho,2)} kg/m³`};},"Hitung","Rumus petroleum standar: SG = 141.5 / (API + 131.5)."));
-add("propeller-slip-calculator",()=>form([{id:"pitch",label:"Pitch propeller (m/rev)",value:1},{id:"rpm",label:"Shaft RPM",value:300},{id:"minutes",label:"Waktu (menit)",value:10},{id:"distance",label:"Jarak aktual (m)",value:2500}],()=>{const theoretical=num("pitch")*num("rpm")*num("minutes");if(theoretical===0)throw new Error("Jarak teoritis tidak boleh 0.");const slip=(theoretical-num("distance"))/theoretical*100;return{value:`${fmt(slip,3)}%`,detail:`Jarak teoritis ${fmt(theoretical,2)} m`};},"Hitung","Apparent slip sederhana; arus, wake, dan kondisi kapal dapat memengaruhi hasil."));
-add("engine-displacement-calculator",()=>form([{id:"bore",label:"Bore (mm)",value:150},{id:"stroke",label:"Stroke (mm)",value:180},{id:"cyl",label:"Jumlah silinder",value:6,min:1}],()=>{const b=num("bore")/1000,s=num("stroke")/1000,c=int("cyl");if(c<=0)throw new Error("Silinder harus > 0.");const m3=Math.PI/4*b*b*s*c;return{value:`${fmt(m3*1e6,2)} cc`,detail:`${fmt(m3*1000,4)} liter total displacement`};}));
-
-/* build database objects for all non-baseline catalog entries */
-const baseline = new Set([
- "calculator","percentage-calculator","age-calculator","bmi-calculator","date-calculator","time-calculator","average-calculator","discount-calculator","ratio-calculator","scientific-calculator",
- "unit-converter","length-converter","weight-converter","temperature-converter","area-converter","volume-converter","speed-converter","pressure-converter","energy-converter","data-storage-converter",
- "word-counter","password-generator","fuel-consumption-calculator","ohms-law-calculator"
-]);
-const db = Object.create(null);
-for (const meta of catalog) {
- if (baseline.has(meta.id)) continue;
- if (typeof impl[meta.id] !== "function") continue;
- db[meta.id] = { title: meta.title.id, category: meta.category.toUpperCase(), icon: meta.icon, description: meta.description.id, run: impl[meta.id] };
-}
-window.AREStyxExtraDatabase = db;
-window.AREStyxExtraMissing = catalog.filter(x=>!baseline.has(x.id)&&typeof impl[x.id]!=="function").map(x=>x.id);
+/* Completes late-rendered standalone template copy without changing tool logic. */
+(() => {
+    const idText = "di AREStyx untuk konversi nilai dan satuan tanpa memasang aplikasi. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan.";
+    const enText = "at AREStyx to convert values and units without installing an app. Core processing runs directly in your browser for speed and ease of use.";
+    let queued = false;
+    const applyTemplateCopy = () => {
+        queued = false;
+        const englishActive = document.getElementById("languageButton")?.textContent?.trim() === "ID";
+        const from = englishActive ? idText : enText;
+        const to = englishActive ? enText : idText;
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+            if (node.nodeValue.includes(from)) node.nodeValue = node.nodeValue.replaceAll(from, to);
+        }
+    };
+    const schedule = () => {
+        if (!queued) { queued = true; setTimeout(applyTemplateCopy, 0); }
+    };
+    const start = () => {
+        new MutationObserver(schedule).observe(document.body, { childList: true, characterData: true, subtree: true });
+        schedule();
+    };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(start, 0), { once: true });
+    else setTimeout(start, 0);
 })();
