@@ -1506,8 +1506,16 @@ function applyActiveToolMetadata() {
         );
 
 
+    const isStandaloneSeoPage =
+        Boolean(
+            document.body?.dataset?.toolId
+        );
+
+
     document.title =
-        `${localizedTitle} | AREStyx`;
+        isStandaloneSeoPage
+            ? `${localizedTitle} Online Gratis | AREStyx`
+            : `${localizedTitle} | AREStyx`;
 
 
     if (toolTitle) {
