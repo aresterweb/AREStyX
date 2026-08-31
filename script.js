@@ -899,110 +899,47 @@ function openTool(toolId) {
 ========================================================= */
 
 function createToolCard(tool) {
+    const title = tool.title[currentLanguage];
+    const description = tool.description[currentLanguage];
+    const actionText = currentLanguage === "id" ? "Buka Tool" : "Open Tool";
+    const card = document.createElement("article");
+    const link = document.createElement("a");
+    const icon = document.createElement("div");
+    const content = document.createElement("div");
+    const heading = document.createElement("h3");
+    const paragraph = document.createElement("p");
+    const action = document.createElement("div");
+    const actionLabel = document.createElement("span");
+    const arrow = document.createElement("span");
 
-    const title =
-        tool.title[currentLanguage];
+    card.className = "tool-card";
+    card.dataset.toolId = tool.id;
+    card.dataset.category = tool.category;
 
-    const description =
-        tool.description[currentLanguage];
+    link.className = "tool-card-link";
+    link.href = "tools/" + encodeURIComponent(tool.id) + ".html";
+    link.setAttribute("aria-label", title);
 
-    const card =
-        document.createElement("article");
+    icon.className = "tool-card-icon";
+    icon.setAttribute("aria-hidden", "true");
+    icon.textContent = tool.icon;
 
-    card.className =
-        "tool-card";
+    content.className = "tool-card-content";
+    heading.className = "tool-card-title";
+    heading.textContent = title;
+    paragraph.className = "tool-card-description";
+    paragraph.textContent = description;
+    content.append(heading, paragraph);
 
-    card.dataset.toolId =
-        tool.id;
+    action.className = "tool-card-action";
+    actionLabel.textContent = actionText;
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    action.append(actionLabel, arrow);
 
-    card.dataset.category =
-        tool.category;
-
-    card.tabIndex = 0;
-
-    card.setAttribute(
-        "role",
-        "button"
-    );
-
-    card.setAttribute(
-        "aria-label",
-        title
-    );
-
-
-    card.innerHTML = `
-
-        <div class="tool-card-icon">
-            ${tool.icon}
-        </div>
-
-        <div class="tool-card-content">
-
-            <h3 class="tool-card-title">
-                ${title}
-            </h3>
-
-            <p class="tool-card-description">
-                ${description}
-            </p>
-
-        </div>
-
-        <div class="tool-card-action">
-
-            <span>
-                ${
-                    currentLanguage === "id"
-                        ? "Buka Tool"
-                        : "Open Tool"
-                }
-            </span>
-
-            <span>
-                →
-            </span>
-
-        </div>
-
-    `;
-
-
-    card.addEventListener(
-        "click",
-        () => {
-
-            openTool(
-                tool.id
-            );
-
-        }
-    );
-
-
-    card.addEventListener(
-        "keydown",
-        event => {
-
-            if (
-                event.key === "Enter" ||
-                event.key === " "
-            ) {
-
-                event.preventDefault();
-
-                openTool(
-                    tool.id
-                );
-
-            }
-
-        }
-    );
-
-
+    link.append(icon, content, action);
+    card.append(link);
     return card;
-
 }
 
 
