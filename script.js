@@ -889,7 +889,7 @@ function openTool(toolId) {
     }
 
     window.location.href =
-        `tools/tools.html?tool=${encodeURIComponent(toolId)}`;
+        `tools/${encodeURIComponent(toolId)}.html`;
 
 }
 

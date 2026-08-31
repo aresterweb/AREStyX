@@ -1,7 +1,7 @@
 /* AREStyx offline service worker */
 "use strict";
 
-const CACHE = "arestyx-static-v6-20260830";
+const CACHE = "arestyx-static-v7-seo-pages-20260831";
 
 const APP_SHELL = [
     "./",
