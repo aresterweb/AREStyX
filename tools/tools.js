@@ -1052,6 +1052,127 @@ const toolPhraseTranslations = [
 ];
 
 
+
+const toolAdditionalTranslations =
+    Object.freeze({
+        "PANDUAN": "GUIDE",
+        "Tools terkait": "Related tools",
+        "Cara menggunakan": "How to use",
+        "Pertanyaan umum": "Frequently asked questions",
+        "Masukkan data pada kolom yang tersedia.": "Enter the requested data in the available fields.",
+        "Tekan tombol proses atau hitung.": "Press the process or calculate button.",
+        "Periksa hasil, satuan, dan detail yang ditampilkan.": "Review the displayed result, units, and details.",
+        "Ya. Tool ini gratis dan dapat digunakan langsung melalui browser tanpa instalasi.": "Yes. This tool is free and works directly in your browser without installation.",
+        "Apakah data dikirim ke server?": "Is data sent to a server?",
+        "Perhitungan utama dijalankan secara lokal di browser. Tetap hindari memasukkan data rahasia pada layanan online apa pun.": "Core calculations run locally in your browser. Avoid entering confidential data into any online service.",
+        "Pilih gambar": "Choose an image",
+        "Preview hasil": "Preview result",
+        "Pilih gambar terlebih dahulu.": "Choose an image first.",
+        "Base64 tidak valid.": "Invalid Base64 input.",
+        "URL encoding tidak valid.": "Invalid URL encoding.",
+        "JSON tidak valid": "Invalid JSON",
+        "URL atau query string": "URL or query string",
+        "JWT tidak valid.": "Invalid JWT.",
+        "Buat Hash": "Create Hash",
+        "Tanggal tidak valid.": "Invalid date.",
+        "Timestamp tidak valid.": "Invalid timestamp.",
+        "Bilangan tidak valid atau terlalu besar.": "The number is invalid or too large.",
+        "HEX harus 3 atau 6 digit.": "HEX must contain 3 or 6 digits.",
+        "IPv4 tidak valid.": "Invalid IPv4 address.",
+        "Rentang tidak valid.": "Invalid range.",
+        "Jumlah kata": "Word count",
+        "Bunga per tahun (%)": "Annual interest rate (%)",
+        "Tenor (bulan)": "Term (months)",
+        "Estimasi matematis; biaya administrasi dan biaya produk finansial tidak dimasukkan.": "Mathematical estimate; administrative and financial-product fees are not included.",
+        "Nilai tidak valid.": "Invalid value.",
+        "Waktu (tahun)": "Time (years)",
+        "Compounding per tahun": "Compounding per year",
+        "Nilai akhir/hasil": "Final value/result",
+        "Jumlah/berat": "Quantity/weight",
+        "Harga jual harus lebih besar dari biaya variabel.": "Selling price must be greater than variable cost.",
+        "Waktu (bulan)": "Time (months)",
+        "Bulan harus > 0.": "Months must be greater than 0.",
+        "Nilai harus valid dan tahun > 0.": "Value must be valid and years must be greater than 0.",
+        "Umur manfaat (tahun)": "Useful life (years)",
+        "Periksa nilai sisa dan umur manfaat.": "Check the residual value and useful life.",
+        "Depresiasi per tahun metode garis lurus": "Annual straight-line depreciation",
+        "Estimasi ideal; kondisi nyata tergantung baterai dan beban.": "Ideal estimate; actual conditions depend on the battery and load.",
+        "RPM ke rad/s": "RPM to rad/s",
+        "rad/s ke RPM": "rad/s to RPM",
+        "Daya (kW)": "Power (kW)",
+        "Tekanan (bar)": "Pressure (bar)",
+        "Kecepatan (m/s)": "Velocity (m/s)",
+        "Tekanan (kPa)": "Pressure (kPa)",
+        "Waktu (menit)": "Time (minutes)",
+        "Apparent slip sederhana; arus, wake, dan kondisi kapal dapat memengaruhi hasil.": "Simplified apparent slip; current, wake, and vessel conditions can affect the result.",
+        "Pembilang 1": "Numerator 1",
+        "Penyebut 1": "Denominator 1",
+        "Pembilang 2": "Numerator 2",
+        "Penyebut 2": "Denominator 2",
+        "Penyebut tidak boleh 0.": "A denominator cannot be 0.",
+        "Tidak dapat membagi dengan pecahan nol.": "Cannot divide by a zero fraction.",
+        "Hasil siap disalin.": "Result is ready to copy.",
+        "Gunakan": "Use",
+        "di AREStyx untuk perhitungan teknik dan marine engineering secara praktis. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan.": "at AREStyx for practical engineering and marine calculations. Core processing runs directly in your browser for speed and convenience.",
+        "INTERNAL LINKING": "RELATED TOOLS"
+    });
+
+function getCatalogTextTranslation(value) {
+    const normalized = normalizeToolText(value);
+    const catalog = Array.isArray(window.AREStyxToolCatalog)
+        ? window.AREStyxToolCatalog
+        : [];
+
+    const match = catalog.find(item =>
+        normalizeToolText(item.title?.id) === normalized ||
+        normalizeToolText(item.description?.id) === normalized
+    );
+
+    if (!match) {
+        return "";
+    }
+
+    return normalizeToolText(
+        normalizeToolText(match.title?.id) === normalized
+            ? match.title?.en
+            : match.description?.en
+    );
+}
+
+function translateToolTemplateText(value) {
+    const normalized = normalizeToolText(value);
+    const title = getCatalogTool(activeToolId)?.title?.en || "";
+
+    if (/^PANDUANs+.+$/i.test(normalized)) {
+        return "GUIDE: " + normalized.replace(/^PANDUANs+/i, "");
+    }
+
+    if (/^.+ online gratis di AREStyx$/i.test(normalized)) {
+        return normalized.replace(/ online gratis di AREStyx$/i, " — Free Online Tool at AREStyx");
+    }
+
+    if (/^Cara menggunakans+.+$/i.test(normalized)) {
+        return normalized.replace(/^Cara menggunakans+/i, "How to use ");
+    }
+
+    if (/^Apakahs+.+ gratis?$/i.test(normalized)) {
+        return normalized.replace(/^Apakahs+(.+) gratis?$/i, "Is $1 free?");
+    }
+
+    if (/^.+ online gratis$/i.test(normalized)) {
+        return "Free online " + normalized.replace(/ online gratis$/i, "");
+    }
+
+    if (normalized === "Konversi" || normalized === "Hitung") {
+        return normalized === "Konversi" ? "Convert" : "Calculate";
+    }
+
+    return title && normalized === "Tool ini sedang dalam tahap pengembangan."
+        ? "This tool is currently under development."
+        : "";
+}
+
+
 const toolTextSources =
     new WeakMap();
 
@@ -1071,35 +1192,37 @@ function normalizeToolText(value) {
 function translateToolTextToEnglish(
     value
 ) {
-
     const normalized =
         normalizeToolText(value);
 
+    const catalogTranslation =
+        getCatalogTextTranslation(normalized);
 
-    if (
-        Object.prototype.hasOwnProperty.call(
-            toolTextTranslations,
-            normalized
-        )
-    ) {
-
-        return toolTextTranslations[
-            normalized
-        ];
-
+    if (catalogTranslation) {
+        return catalogTranslation;
     }
 
+    if (Object.prototype.hasOwnProperty.call(toolAdditionalTranslations, normalized)) {
+        return toolAdditionalTranslations[normalized];
+    }
+
+    if (Object.prototype.hasOwnProperty.call(toolTextTranslations, normalized)) {
+        return toolTextTranslations[normalized];
+    }
+
+    const templateTranslation =
+        translateToolTemplateText(normalized);
+
+    if (templateTranslation) {
+        return templateTranslation;
+    }
 
     return toolPhraseTranslations
         .reduce(
             (translated, rule) =>
-                translated.replace(
-                    rule[0],
-                    rule[1]
-                ),
+                translated.replace(rule[0], rule[1]),
             normalized
         );
-
 }
 
 
