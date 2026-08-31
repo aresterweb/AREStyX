@@ -2029,7 +2029,9 @@ function getCatalogTextTranslation(value) {
     if (descriptionPrefix) {
         const sourceDescription = normalizeToolText(descriptionPrefix.description.id);
         const englishDescription = normalizeToolText(descriptionPrefix.description.en);
-        return normalized.replace(sourceDescription, englishDescription);
+        return normalized
+            .replace(sourceDescription, englishDescription)
+            .replace(/\bGunakan\b/g, "Use");
     }
 
     return "";
