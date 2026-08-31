@@ -124,29 +124,26 @@ add("depreciation-calculator",()=>form([{id:"cost",label:"Harga perolehan",value
 add("tip-calculator",()=>form([{id:"bill",label:"Total tagihan",value:200000},{id:"tip",label:"Tip (%)",value:10},{id:"people",label:"Jumlah orang",value:2,min:1}],()=>{const b=num("bill"),t=b*num("tip")/100,p=int("people");if(p<=0)throw new Error("Jumlah orang harus > 0.");return{value:`${fmt((b+t)/p,2)} / orang`,detail:`Tip ${fmt(t,2)} • total ${fmt(b+t,2)}`};}));
 add("discount-stack-calculator",()=>form([{id:"price",label:"Harga awal",value:100000},{id:"d1",label:"Diskon 1 (%)",value:20},{id:"d2",label:"Diskon 2 (%)",value:10}],()=>{const p=num("price"),d1=num("d1"),d2=num("d2");if([d1,d2].some(x=>x<0||x>100))throw new Error("Diskon harus 0–100%.");const f=p*(1-d1/100)*(1-d2/100),eff=(1-f/p)*100;return{value:fmt(f,2),detail:`Diskon efektif ${fmt(eff,2)}% • hemat ${fmt(p-f,2)}`};}));
 
-/* Completes late-rendered standalone template copy without changing tool logic. */
+/* Localize the shared standalone introduction after the core tool UI has rendered. */
 (() => {
-    const idText = "di AREStyx untuk konversi nilai dan satuan tanpa memasang aplikasi. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan.";
-    const enText = "at AREStyx to convert values and units without installing an app. Core processing runs directly in your browser for speed and ease of use.";
+    const idPattern = /di AREStyx untuk [^.]+\. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan\./g;
     let queued = false;
     const applyTemplateCopy = () => {
         queued = false;
         const englishActive = document.getElementById("languageButton")?.textContent?.trim() === "ID";
-        const from = englishActive ? idText : enText;
-        const to = englishActive ? enText : idText;
+        if (!englishActive) return;
         const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
         let node;
         while ((node = walker.nextNode())) {
-            if (node.nodeValue.includes(from)) node.nodeValue = node.nodeValue.replaceAll(from, to);
+            if (idPattern.test(node.nodeValue)) {
+                idPattern.lastIndex = 0;
+                node.nodeValue = node.nodeValue.replace(idPattern, "at AREStyx. Core processing runs directly in your browser for speed and ease of use.");
+            }
+            idPattern.lastIndex = 0;
         }
     };
-    const schedule = () => {
-        if (!queued) { queued = true; setTimeout(applyTemplateCopy, 0); }
-    };
-    const start = () => {
-        new MutationObserver(schedule).observe(document.body, { childList: true, characterData: true, subtree: true });
-        schedule();
-    };
+    const schedule = () => { if (!queued) { queued = true; setTimeout(applyTemplateCopy, 0); } };
+    const start = () => { new MutationObserver(schedule).observe(document.body, { childList: true, characterData: true, subtree: true }); schedule(); };
     if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(start, 0), { once: true });
     else setTimeout(start, 0);
 })();
