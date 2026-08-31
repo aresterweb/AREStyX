@@ -1694,6 +1694,16 @@ function setToolLanguage(
 
 function getToolName() {
 
+    const pageToolId =
+        document.body?.dataset?.toolId;
+
+
+    if (pageToolId) {
+
+        return pageToolId;
+
+    }
+
     const params =
         new URLSearchParams(
             window.location.search
