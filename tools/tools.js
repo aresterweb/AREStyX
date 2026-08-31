@@ -1128,35 +1128,46 @@ function getCatalogTextTranslation(value) {
         normalizeToolText(item.description?.id) === normalized
     );
 
-    if (!match) {
-        return "";
+    if (match) {
+        return normalizeToolText(
+            normalizeToolText(match.title?.id) === normalized
+                ? match.title?.en
+                : match.description?.en
+        );
     }
 
-    return normalizeToolText(
-        normalizeToolText(match.title?.id) === normalized
-            ? match.title?.en
-            : match.description?.en
-    );
+    const descriptionPrefix = catalog.find(item => {
+        const sourceDescription = normalizeToolText(item.description?.id);
+        return sourceDescription && normalized.startsWith(sourceDescription);
+    });
+
+    if (descriptionPrefix) {
+        const sourceDescription = normalizeToolText(descriptionPrefix.description.id);
+        const englishDescription = normalizeToolText(descriptionPrefix.description.en);
+        return normalized.replace(sourceDescription, englishDescription);
+    }
+
+    return "";
 }
 
 function translateToolTemplateText(value) {
     const normalized = normalizeToolText(value);
     const title = getCatalogTool(activeToolId)?.title?.en || "";
 
-    if (/^PANDUANs+.+$/i.test(normalized)) {
-        return "GUIDE: " + normalized.replace(/^PANDUANs+/i, "");
+    if (/^PANDUAN\s+.+$/i.test(normalized)) {
+        return "GUIDE: " + normalized.replace(/^PANDUAN\s+/i, "");
     }
 
     if (/^.+ online gratis di AREStyx$/i.test(normalized)) {
         return normalized.replace(/ online gratis di AREStyx$/i, " — Free Online Tool at AREStyx");
     }
 
-    if (/^Cara menggunakans+.+$/i.test(normalized)) {
-        return normalized.replace(/^Cara menggunakans+/i, "How to use ");
+    if (/^Cara menggunakan\s+.+$/i.test(normalized)) {
+        return normalized.replace(/^Cara menggunakan\s+/i, "How to use ");
     }
 
-    if (/^Apakahs+.+ gratis?$/i.test(normalized)) {
-        return normalized.replace(/^Apakahs+(.+) gratis?$/i, "Is $1 free?");
+    if (/^Apakah\s+.+ gratis?$/i.test(normalized)) {
+        return normalized.replace(/^Apakah\s+(.+) gratis?$/i, "Is $1 free?");
     }
 
     if (/^.+ online gratis$/i.test(normalized)) {
