@@ -120,6 +120,39 @@ add("unit-price-calculator",()=>form([{id:"price",label:"Harga total",value:5000
 add("break-even-calculator",()=>form([{id:"fixed",label:"Biaya tetap",value:1000000},{id:"price",label:"Harga jual per unit",value:50000},{id:"variable",label:"Biaya variabel per unit",value:30000}],()=>{const m=num("price")-num("variable");if(m<=0)throw new Error("Harga jual harus lebih besar dari biaya variabel.");const u=Math.ceil(num("fixed")/m);return{value:`${u.toLocaleString("id-ID")} unit`,detail:`Contribution margin ${fmt(m,2)} / unit`};}));
 add("savings-goal-calculator",()=>form([{id:"target",label:"Target",value:12000000},{id:"current",label:"Tabungan sekarang",value:0},{id:"months",label:"Waktu (bulan)",value:12,min:1}],()=>{const n=int("months");if(n<=0)throw new Error("Bulan harus > 0.");const gap=Math.max(0,num("target")-num("current"));return{value:fmt(gap/n,2),detail:`Setoran per bulan tanpa asumsi bunga • sisa ${fmt(gap,2)}`};}));
 add("cagr-calculator",()=>form([{id:"start",label:"Nilai awal",value:100},{id:"end",label:"Nilai akhir",value:150},{id:"years",label:"Tahun",value:3,min:.01}],()=>{const s=num("start"),e=num("end"),y=num("years");if(s<=0||e<0||y<=0)throw new Error("Nilai harus valid dan tahun > 0.");return{value:`${fmt(((e/s)**(1/y)-1)*100,3)}% / tahun`,detail:"Compound annual growth rate"};}));
+
+add("depreciation-calculator",()=>form([{id:"cost",label:"Harga perolehan",value:10000000},{id:"salvage",label:"Nilai sisa",value:1000000},{id:"years",label:"Umur manfaat (tahun)",value:5,min:1}],()=>{const c=num("cost"),s=num("salvage"),y=num("years");if(y<=0||s>c)throw new Error("Periksa nilai sisa dan umur manfaat.");return{value:fmt((c-s)/y,2),detail:"Depresiasi per tahun metode garis lurus"};}));
+add("tip-calculator",()=>form([{id:"bill",label:"Total tagihan",value:200000},{id:"tip",label:"Tip (%)",value:10},{id:"people",label:"Jumlah orang",value:2,min:1}],()=>{const b=num("bill"),t=b*num("tip")/100,p=int("people");if(p<=0)throw new Error("Jumlah orang harus > 0.");return{value:`${fmt((b+t)/p,2)} / orang`,detail:`Tip ${fmt(t,2)} • total ${fmt(b+t,2)}`};}));
+add("discount-stack-calculator",()=>form([{id:"price",label:"Harga awal",value:100000},{id:"d1",label:"Diskon 1 (%)",value:20},{id:"d2",label:"Diskon 2 (%)",value:10}],()=>{const p=num("price"),d1=num("d1"),d2=num("d2");if([d1,d2].some(x=>x<0||x>100))throw new Error("Diskon harus 0–100%.");const f=p*(1-d1/100)*(1-d2/100),eff=(1-f/p)*100;return{value:fmt(f,2),detail:`Diskon efektif ${fmt(eff,2)}% • hemat ${fmt(p-f,2)}`};}));
+
+/* Localize shared standalone introductions while preserving their Indonesian source for a reversible toggle. */
+(() => {
+    const idPattern = /di AREStyx untuk [^.]+\. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan\./g;
+    const enText = "at AREStyx. Core processing runs directly in your browser for speed and ease of use.";
+    const originals = new WeakMap();
+    let queued = false;
+    const applyTemplateCopy = () => {
+        queued = false;
+        const englishActive = document.getElementById("languageButton")?.textContent?.trim() === "ID";
+        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+        let node;
+        while ((node = walker.nextNode())) {
+            if (englishActive && idPattern.test(node.nodeValue)) {
+                idPattern.lastIndex = 0;
+                originals.set(node, node.nodeValue);
+                node.nodeValue = node.nodeValue.replace(idPattern, enText);
+            } else if (!englishActive && originals.has(node) && node.nodeValue.includes(enText)) {
+                node.nodeValue = originals.get(node);
+            }
+            idPattern.lastIndex = 0;
+        }
+    };
+    const schedule = () => { if (!queued) { queued = true; setTimeout(applyTemplateCopy, 0); } };
+    const start = () => { new MutationObserver(schedule).observe(document.body, { childList: true, characterData: true, subtree: true }); schedule(); };
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(start, 0), { once: true });
+    else setTimeout(start, 0);
+})();
+
 /* =========================================================
    AREStyx ENGINEERING COMPLETION PATCH
    Append this file to the END of tools/tools-extra.js.
@@ -485,34 +518,3 @@ window.AREStyxExtraDatabase = Object.fromEntries(
             }
         ])
 );
-add("depreciation-calculator",()=>form([{id:"cost",label:"Harga perolehan",value:10000000},{id:"salvage",label:"Nilai sisa",value:1000000},{id:"years",label:"Umur manfaat (tahun)",value:5,min:1}],()=>{const c=num("cost"),s=num("salvage"),y=num("years");if(y<=0||s>c)throw new Error("Periksa nilai sisa dan umur manfaat.");return{value:fmt((c-s)/y,2),detail:"Depresiasi per tahun metode garis lurus"};}));
-add("tip-calculator",()=>form([{id:"bill",label:"Total tagihan",value:200000},{id:"tip",label:"Tip (%)",value:10},{id:"people",label:"Jumlah orang",value:2,min:1}],()=>{const b=num("bill"),t=b*num("tip")/100,p=int("people");if(p<=0)throw new Error("Jumlah orang harus > 0.");return{value:`${fmt((b+t)/p,2)} / orang`,detail:`Tip ${fmt(t,2)} • total ${fmt(b+t,2)}`};}));
-add("discount-stack-calculator",()=>form([{id:"price",label:"Harga awal",value:100000},{id:"d1",label:"Diskon 1 (%)",value:20},{id:"d2",label:"Diskon 2 (%)",value:10}],()=>{const p=num("price"),d1=num("d1"),d2=num("d2");if([d1,d2].some(x=>x<0||x>100))throw new Error("Diskon harus 0–100%.");const f=p*(1-d1/100)*(1-d2/100),eff=(1-f/p)*100;return{value:fmt(f,2),detail:`Diskon efektif ${fmt(eff,2)}% • hemat ${fmt(p-f,2)}`};}));
-
-/* Localize shared standalone introductions while preserving their Indonesian source for a reversible toggle. */
-(() => {
-    const idPattern = /di AREStyx untuk [^.]+\. Proses utama berjalan langsung di browser agar cepat dan mudah digunakan\./g;
-    const enText = "at AREStyx. Core processing runs directly in your browser for speed and ease of use.";
-    const originals = new WeakMap();
-    let queued = false;
-    const applyTemplateCopy = () => {
-        queued = false;
-        const englishActive = document.getElementById("languageButton")?.textContent?.trim() === "ID";
-        const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
-        let node;
-        while ((node = walker.nextNode())) {
-            if (englishActive && idPattern.test(node.nodeValue)) {
-                idPattern.lastIndex = 0;
-                originals.set(node, node.nodeValue);
-                node.nodeValue = node.nodeValue.replace(idPattern, enText);
-            } else if (!englishActive && originals.has(node) && node.nodeValue.includes(enText)) {
-                node.nodeValue = originals.get(node);
-            }
-            idPattern.lastIndex = 0;
-        }
-    };
-    const schedule = () => { if (!queued) { queued = true; setTimeout(applyTemplateCopy, 0); } };
-    const start = () => { new MutationObserver(schedule).observe(document.body, { childList: true, characterData: true, subtree: true }); schedule(); };
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", () => setTimeout(start, 0), { once: true });
-    else setTimeout(start, 0);
-})();
