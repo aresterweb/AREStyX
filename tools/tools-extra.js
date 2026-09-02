@@ -120,6 +120,371 @@ add("unit-price-calculator",()=>form([{id:"price",label:"Harga total",value:5000
 add("break-even-calculator",()=>form([{id:"fixed",label:"Biaya tetap",value:1000000},{id:"price",label:"Harga jual per unit",value:50000},{id:"variable",label:"Biaya variabel per unit",value:30000}],()=>{const m=num("price")-num("variable");if(m<=0)throw new Error("Harga jual harus lebih besar dari biaya variabel.");const u=Math.ceil(num("fixed")/m);return{value:`${u.toLocaleString("id-ID")} unit`,detail:`Contribution margin ${fmt(m,2)} / unit`};}));
 add("savings-goal-calculator",()=>form([{id:"target",label:"Target",value:12000000},{id:"current",label:"Tabungan sekarang",value:0},{id:"months",label:"Waktu (bulan)",value:12,min:1}],()=>{const n=int("months");if(n<=0)throw new Error("Bulan harus > 0.");const gap=Math.max(0,num("target")-num("current"));return{value:fmt(gap/n,2),detail:`Setoran per bulan tanpa asumsi bunga • sisa ${fmt(gap,2)}`};}));
 add("cagr-calculator",()=>form([{id:"start",label:"Nilai awal",value:100},{id:"end",label:"Nilai akhir",value:150},{id:"years",label:"Tahun",value:3,min:.01}],()=>{const s=num("start"),e=num("end"),y=num("years");if(s<=0||e<0||y<=0)throw new Error("Nilai harus valid dan tahun > 0.");return{value:`${fmt(((e/s)**(1/y)-1)*100,3)}% / tahun`,detail:"Compound annual growth rate"};}));
+/* =========================================================
+   AREStyx ENGINEERING COMPLETION PATCH
+   Append this file to the END of tools/tools-extra.js.
+
+   Purpose:
+   - Add the 18 Engineering implementations that are absent
+     from the current tools-extra.js source.
+   - Export every implementation registered with add() to
+     window.AREStyxExtraDatabase before tools.js is loaded.
+
+   IMPORTANT:
+   This file is designed to be concatenated into tools-extra.js,
+   where add(), form(), num(), int(), list(), get(), fmt(), impl
+   and catalog already exist.
+========================================================= */
+
+/* ---------- Engineering: electrical ---------- */
+add("electrical-power-calculator", () => form([
+    { id: "voltage", label: "Tegangan (V)", value: 220, min: 0 },
+    { id: "current", label: "Arus (A)", value: 2, min: 0 }
+], () => {
+    const v = num("voltage");
+    const i = num("current");
+    if (v < 0 || i < 0) throw new Error("Nilai tidak boleh negatif.");
+    const p = v * i;
+    return {
+        value: `${fmt(p, 4)} W`,
+        detail: `P = V × I • ${fmt(p / 1000, 6)} kW`
+    };
+}, "Hitung"));
+
+add("series-resistance-calculator", () => form([
+    {
+        id: "resistors",
+        label: "Daftar resistansi (Ω)",
+        type: "textarea",
+        full: true,
+        value: "100, 220, 330",
+        placeholder: "100, 220, 330"
+    }
+], () => {
+    const values = list(get("resistors"));
+    if (values.some(v => v < 0)) throw new Error("Resistansi tidak boleh negatif.");
+    const total = values.reduce((sum, v) => sum + v, 0);
+    return {
+        value: `${fmt(total, 6)} Ω`,
+        detail: `${values.length} resistor • Rtotal = R1 + R2 + …`
+    };
+}, "Hitung"));
+
+add("parallel-resistance-calculator", () => form([
+    {
+        id: "resistors",
+        label: "Daftar resistansi (Ω)",
+        type: "textarea",
+        full: true,
+        value: "100, 220, 330",
+        placeholder: "100, 220, 330"
+    }
+], () => {
+    const values = list(get("resistors"));
+    if (values.some(v => v < 0)) throw new Error("Resistansi tidak boleh negatif.");
+    if (values.some(v => v === 0)) {
+        return { value: "0 Ω", detail: "Cabang 0 Ω membuat resistansi ekuivalen 0 Ω." };
+    }
+    const reciprocal = values.reduce((sum, v) => sum + 1 / v, 0);
+    if (!Number.isFinite(reciprocal) || reciprocal <= 0) {
+        throw new Error("Daftar resistansi tidak valid.");
+    }
+    const total = 1 / reciprocal;
+    return {
+        value: `${fmt(total, 6)} Ω`,
+        detail: `${values.length} resistor • 1/Rtotal = Σ(1/R)`
+    };
+}, "Hitung"));
+
+add("voltage-divider-calculator", () => form([
+    { id: "vin", label: "Tegangan (V)", value: 12 },
+    { id: "r1", label: "R1 (Ω)", value: 1000, min: 0 },
+    { id: "r2", label: "R2 (Ω)", value: 1000, min: 0 }
+], () => {
+    const vin = num("vin");
+    const r1 = num("r1");
+    const r2 = num("r2");
+    if (r1 < 0 || r2 < 0 || r1 + r2 === 0) {
+        throw new Error("R1 + R2 harus lebih besar dari 0.");
+    }
+    const vout = vin * r2 / (r1 + r2);
+    return {
+        value: `${fmt(vout, 6)} V`,
+        detail: "Vout = Vin × R2 / (R1 + R2)"
+    };
+}, "Hitung"));
+
+add("battery-runtime-calculator", () => form([
+    { id: "capacity", label: "Kapasitas (Ah)", value: 100, min: 0 },
+    { id: "load", label: "Arus beban (A)", value: 10, min: 0.000001 },
+    { id: "efficiency", label: "Efisiensi (%)", value: 85, min: 1, max: 100 }
+], () => {
+    const capacity = num("capacity");
+    const load = num("load");
+    const efficiency = num("efficiency");
+    if (capacity < 0 || load <= 0 || efficiency <= 0 || efficiency > 100) {
+        throw new Error("Periksa kapasitas, arus beban, dan efisiensi.");
+    }
+    const hours = capacity * (efficiency / 100) / load;
+    return {
+        value: `${fmt(hours, 4)} jam`,
+        detail: `${fmt(hours * 60, 2)} menit • estimasi ideal dengan faktor efisiensi`
+    };
+}, "Hitung", "Estimasi sederhana; karakteristik baterai, suhu, umur, C-rate, dan inverter dapat mengubah runtime aktual."));
+
+add("transformer-calculator", () => form([
+    { id: "v1", label: "Tegangan primer (V)", value: 220 },
+    { id: "n1", label: "Lilitan primer (N1)", value: 1000, min: 0.000001 },
+    { id: "n2", label: "Lilitan sekunder (N2)", value: 100, min: 0 }
+], () => {
+    const v1 = num("v1");
+    const n1 = num("n1");
+    const n2 = num("n2");
+    if (n1 <= 0 || n2 < 0) throw new Error("Jumlah lilitan tidak valid.");
+    const v2 = v1 * n2 / n1;
+    return {
+        value: `${fmt(v2, 6)} V`,
+        detail: `V2/V1 = N2/N1 • rasio ${fmt(n1 / Math.max(n2, Number.EPSILON), 6)}:1`
+    };
+}, "Hitung"));
+
+add("period-frequency-calculator", () => form([
+    {
+        id: "mode",
+        label: "Mode",
+        type: "select",
+        options: [
+            { value: "frequency", label: "Frekuensi → Periode" },
+            { value: "period", label: "Periode → Frekuensi" }
+        ]
+    },
+    { id: "value", label: "Nilai", value: 50, min: 0.000000001, step: "any" }
+], () => {
+    const value = num("value");
+    if (value <= 0) throw new Error("Nilai harus lebih besar dari 0.");
+    if (get("mode") === "frequency") {
+        const period = 1 / value;
+        return {
+            value: `${fmt(period, 9)} s`,
+            detail: `${fmt(period * 1000, 6)} ms • T = 1/f`
+        };
+    }
+    const frequency = 1 / value;
+    return {
+        value: `${fmt(frequency, 9)} Hz`,
+        detail: `f = 1/T`
+    };
+}, "Konversi"));
+
+add("rpm-rads-converter", () => form([
+    {
+        id: "mode",
+        label: "Mode",
+        type: "select",
+        options: [
+            { value: "rpm", label: "RPM → rad/s" },
+            { value: "rads", label: "rad/s → RPM" }
+        ]
+    },
+    { id: "value", label: "Nilai", value: 1500, step: "any" }
+], () => {
+    const value = num("value");
+    if (get("mode") === "rpm") {
+        const rads = value * 2 * Math.PI / 60;
+        return { value: `${fmt(rads, 8)} rad/s`, detail: "ω = RPM × 2π / 60" };
+    }
+    const rpm = value * 60 / (2 * Math.PI);
+    return { value: `${fmt(rpm, 8)} RPM`, detail: "RPM = ω × 60 / 2π" };
+}, "Konversi"));
+
+/* ---------- Engineering: mechanical / marine ---------- */
+add("torque-power-calculator", () => form([
+    { id: "power", label: "Daya (kW)", value: 100, min: 0 },
+    { id: "rpm", label: "RPM", value: 1500, min: 0.000001 }
+], () => {
+    const power = num("power");
+    const rpm = num("rpm");
+    if (power < 0 || rpm <= 0) throw new Error("Daya harus ≥ 0 dan RPM harus > 0.");
+    const torque = 9550 * power / rpm;
+    return {
+        value: `${fmt(torque, 6)} N·m`,
+        detail: "T ≈ 9550 × P(kW) / RPM"
+    };
+}, "Hitung"));
+
+add("gear-ratio-calculator", () => form([
+    { id: "driver", label: "Gigi penggerak", value: 20, min: 1 },
+    { id: "driven", label: "Gigi digerakkan", value: 60, min: 1 },
+    { id: "inputRpm", label: "RPM input", value: 1500, min: 0 }
+], () => {
+    const driver = num("driver");
+    const driven = num("driven");
+    const input = num("inputRpm");
+    if (driver <= 0 || driven <= 0 || input < 0) throw new Error("Nilai gear dan RPM tidak valid.");
+    const ratio = driven / driver;
+    const output = input / ratio;
+    return {
+        value: `${fmt(ratio, 6)} : 1`,
+        detail: `RPM output ${fmt(output, 4)} • ratio = driven / driver`
+    };
+}, "Hitung"));
+
+add("hydraulic-power-calculator", () => form([
+    { id: "pressure", label: "Tekanan (bar)", value: 150, min: 0 },
+    { id: "flow", label: "Debit (L/min)", value: 60, min: 0 },
+    { id: "efficiency", label: "Efisiensi (%)", value: 100, min: 1, max: 100 }
+], () => {
+    const pressure = num("pressure");
+    const flow = num("flow");
+    const efficiency = num("efficiency");
+    if (pressure < 0 || flow < 0 || efficiency <= 0 || efficiency > 100) {
+        throw new Error("Nilai tidak valid.");
+    }
+    const idealKw = pressure * flow / 600;
+    const outputKw = idealKw * efficiency / 100;
+    return {
+        value: `${fmt(outputKw, 6)} kW`,
+        detail: `Ideal ${fmt(idealKw, 6)} kW • P = bar × L/min / 600`
+    };
+}, "Hitung"));
+
+add("pipe-velocity-calculator", () => form([
+    { id: "flow", label: "Debit (L/min)", value: 100, min: 0 },
+    { id: "diameter", label: "Diameter pipa (mm)", value: 50, min: 0.000001 }
+], () => {
+    const flowLMin = num("flow");
+    const diameterMm = num("diameter");
+    if (flowLMin < 0 || diameterMm <= 0) throw new Error("Debit harus ≥ 0 dan diameter harus > 0.");
+    const q = flowLMin / 1000 / 60;
+    const d = diameterMm / 1000;
+    const area = Math.PI * d * d / 4;
+    const velocity = q / area;
+    return {
+        value: `${fmt(velocity, 6)} m/s`,
+        detail: `A = ${fmt(area, 9)} m² • v = Q/A`
+    };
+}, "Hitung"));
+
+add("reynolds-number-calculator", () => form([
+    { id: "density", label: "Densitas (kg/m³)", value: 1000, min: 0.000001 },
+    { id: "velocity", label: "Kecepatan (m/s)", value: 1, min: 0 },
+    { id: "diameter", label: "Diameter (m)", value: 0.05, min: 0.000000001, step: "any" },
+    { id: "viscosity", label: "Viskositas dinamis (Pa·s)", value: 0.001, min: 0.000000001, step: "any" }
+], () => {
+    const rho = num("density");
+    const v = num("velocity");
+    const d = num("diameter");
+    const mu = num("viscosity");
+    if (rho <= 0 || v < 0 || d <= 0 || mu <= 0) throw new Error("Nilai tidak valid.");
+    const re = rho * v * d / mu;
+    let regime = "transisi";
+    if (re < 2300) regime = "laminar";
+    else if (re > 4000) regime = "turbulen";
+    return {
+        value: fmt(re, 4),
+        detail: `Re = ρvD/μ • perkiraan regime ${regime}`
+    };
+}, "Hitung", "Batas regime bergantung pada geometri dan kondisi aliran; nilai 2300/4000 adalah pedoman umum untuk aliran internal pipa."));
+
+add("pressure-head-calculator", () => form([
+    { id: "pressure", label: "Tekanan (kPa)", value: 100, min: 0 },
+    { id: "density", label: "Densitas (kg/m³)", value: 1000, min: 0.000001 }
+], () => {
+    const pressureKpa = num("pressure");
+    const rho = num("density");
+    if (pressureKpa < 0 || rho <= 0) throw new Error("Tekanan harus ≥ 0 dan densitas harus > 0.");
+    const g = 9.80665;
+    const head = pressureKpa * 1000 / (rho * g);
+    return {
+        value: `${fmt(head, 6)} m`,
+        detail: `h = P/(ρg) • g = ${g} m/s²`
+    };
+}, "Hitung"));
+
+add("specific-gravity-calculator", () => form([
+    { id: "density", label: "Densitas (kg/m³)", value: 850, min: 0 }
+], () => {
+    const density = num("density");
+    if (density < 0) throw new Error("Densitas tidak boleh negatif.");
+    const sg = density / 1000;
+    return {
+        value: fmt(sg, 8),
+        detail: "SG = ρ / 1000 • water reference = 1000 kg/m³"
+    };
+}, "Hitung"));
+
+add("api-gravity-calculator", () => form([
+    { id: "api", label: "API Gravity (°API)", value: 35, step: "any" }
+], () => {
+    const api = num("api");
+    const denominator = api + 131.5;
+    if (denominator <= 0) throw new Error("API gravity berada di luar rentang formula.");
+    const sg = 141.5 / denominator;
+    const density = sg * 999.016;
+    return {
+        value: `SG ${fmt(sg, 8)}`,
+        detail: `≈ ${fmt(density, 3)} kg/m³ • SG = 141.5 / (API + 131.5)`
+    };
+}, "Hitung", "Konversi standar menggunakan referensi petroleum 60°F; densitas yang ditampilkan adalah perkiraan dari SG."));
+
+add("propeller-slip-calculator", () => form([
+    { id: "pitch", label: "Pitch propeller (m/rev)", value: 3, min: 0 },
+    { id: "rpm", label: "RPM", value: 100, min: 0 },
+    { id: "minutes", label: "Waktu (menit)", value: 10, min: 0 },
+    { id: "actual", label: "Jarak aktual (m)", value: 2500, min: 0 }
+], () => {
+    const pitch = num("pitch");
+    const rpm = num("rpm");
+    const minutes = num("minutes");
+    const actual = num("actual");
+    if ([pitch, rpm, minutes, actual].some(v => v < 0)) throw new Error("Nilai tidak boleh negatif.");
+    const theoretical = pitch * rpm * minutes;
+    if (theoretical === 0) throw new Error("Jarak teoritis tidak boleh 0.");
+    const slip = (theoretical - actual) / theoretical * 100;
+    return {
+        value: `${fmt(slip, 4)}%`,
+        detail: `Jarak teoritis ${fmt(theoretical, 3)} m • apparent slip sederhana`
+    };
+}, "Hitung", "Apparent slip sederhana; arus, wake, pitch efektif, dan kondisi kapal dapat memengaruhi hasil."));
+
+add("engine-displacement-calculator", () => form([
+    { id: "bore", label: "Bore (mm)", value: 150, min: 0.000001 },
+    { id: "stroke", label: "Stroke (mm)", value: 180, min: 0.000001 },
+    { id: "cylinders", label: "Jumlah silinder", value: 6, min: 1 }
+], () => {
+    const bore = num("bore");
+    const stroke = num("stroke");
+    const cylinders = int("cylinders");
+    if (bore <= 0 || stroke <= 0 || cylinders <= 0) throw new Error("Bore, stroke, dan silinder harus > 0.");
+    const ccPerCylinder = Math.PI / 4 * bore * bore * stroke / 1000;
+    const totalCc = ccPerCylinder * cylinders;
+    return {
+        value: `${fmt(totalCc, 3)} cc`,
+        detail: `${fmt(totalCc / 1000, 6)} L • ${fmt(ccPerCylinder, 3)} cc/silinder`
+    };
+}, "Hitung"));
+
+/* =========================================================
+   EXPORT EXTRA DATABASE
+
+   This is the missing registration bridge in the current
+   source. tools.js already checks window.AREStyxExtraDatabase
+   before initializing a tool.
+========================================================= */
+window.AREStyxExtraDatabase = Object.fromEntries(
+    catalog
+        .filter(tool => tool && typeof impl[tool.id] === "function")
+        .map(tool => [
+            tool.id,
+            {
+                title: (tool.title && (tool.title.id || tool.title.en)) || tool.id,
+                category: String(tool.category || "TOOL").toUpperCase(),
+                icon: tool.icon || "⚙",
+                description: (tool.description && (tool.description.id || tool.description.en)) || "",
+                run: impl[tool.id]
+            }
+        ])
+);
 add("depreciation-calculator",()=>form([{id:"cost",label:"Harga perolehan",value:10000000},{id:"salvage",label:"Nilai sisa",value:1000000},{id:"years",label:"Umur manfaat (tahun)",value:5,min:1}],()=>{const c=num("cost"),s=num("salvage"),y=num("years");if(y<=0||s>c)throw new Error("Periksa nilai sisa dan umur manfaat.");return{value:fmt((c-s)/y,2),detail:"Depresiasi per tahun metode garis lurus"};}));
 add("tip-calculator",()=>form([{id:"bill",label:"Total tagihan",value:200000},{id:"tip",label:"Tip (%)",value:10},{id:"people",label:"Jumlah orang",value:2,min:1}],()=>{const b=num("bill"),t=b*num("tip")/100,p=int("people");if(p<=0)throw new Error("Jumlah orang harus > 0.");return{value:`${fmt((b+t)/p,2)} / orang`,detail:`Tip ${fmt(t,2)} • total ${fmt(b+t,2)}`};}));
 add("discount-stack-calculator",()=>form([{id:"price",label:"Harga awal",value:100000},{id:"d1",label:"Diskon 1 (%)",value:20},{id:"d2",label:"Diskon 2 (%)",value:10}],()=>{const p=num("price"),d1=num("d1"),d2=num("d2");if([d1,d2].some(x=>x<0||x>100))throw new Error("Diskon harus 0–100%.");const f=p*(1-d1/100)*(1-d2/100),eff=(1-f/p)*100;return{value:fmt(f,2),detail:`Diskon efektif ${fmt(eff,2)}% • hemat ${fmt(p-f,2)}`};}));
