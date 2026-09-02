@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#07111f">
+    <meta name="color-scheme" content="dark">
+    <meta name="description" content="Request tool baru untuk AREStyx. Ajukan kebutuhan, pilih tingkat kompleksitas, dan gunakan jalur Priority Paid Request setelah permintaan disetujui.">
+    <meta name="robots" content="index, follow">
+    <title>Request Tool | AREStyx</title>
+    <link rel="canonical" href="https://are-sty-x.vercel.app/request-tool.html">
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon.png">
+    <link rel="apple-touch-icon" href="assets/arestyx-logo-192.png">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="request-tool.css">
+</head>
+<body>
+    <div class="background-grid"></div>
+    <div class="background-glow glow-one"></div>
+    <div class="background-glow glow-two"></div>
+
+    <header class="header">
+        <div class="container header-container">
+            <a href="index.html" class="brand" aria-label="AREStyx Home">
+                <img src="assets/arestyx-logo-192.png" alt="AREStyx" width="192" height="192" class="brand-logo">
+                <div class="brand-text">
+                    <span class="brand-name">AREStyx</span>
+                    <span class="brand-tagline">FREE ONLINE TOOLS</span>
+                </div>
+            </a>
+            <div class="request-header-actions">
+                <button id="languageButton" class="language-button" type="button" aria-label="Change language">EN</button>
+                <a href="index.html#allTools" class="button button-secondary" data-i18n="allTools">Semua Tools</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="request-page">
+        <section class="request-hero">
+            <div class="container request-hero-grid">
+                <div>
+                    <span class="section-label">AREStyx REQUEST LAB</span>
+                    <h1 data-i18n="heroTitle">Minta Tool Baru Dibuat</h1>
+                    <p data-i18n="heroText">Ajukan tool yang belum tersedia. Permintaan ditinjau terlebih dahulu. Jika disetujui, kamu dapat memilih Priority Paid Request agar pengembangan diprioritaskan.</p>
+                    <div class="request-badges">
+                        <span data-i18n="badgeReview">✓ Review sebelum bayar</span>
+                        <span data-i18n="badgePublic">✓ Tool dapat dirilis publik</span>
+                        <span data-i18n="badgeManual">✓ Verifikasi pembayaran manual</span>
+                    </div>
+                </div>
+                <div class="request-flow-card">
+                    <strong data-i18n="flowTitle">Alur aman</strong>
+                    <ol>
+                        <li data-i18n="flow1">Isi detail kebutuhan.</li>
+                        <li data-i18n="flow2">Buat Request ID dan kirim permintaan.</li>
+                        <li data-i18n="flow3">Tunggu persetujuan / penetapan tingkat kompleksitas.</li>
+                        <li data-i18n="flow4">Jika disetujui, bayar melalui QRIS dengan nominal verifikasi.</li>
+                        <li data-i18n="flow5">Setelah pembayaran cocok, pengembangan masuk antrean prioritas.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container request-layout">
+                <form id="requestForm" class="request-panel" novalidate>
+                    <div class="request-panel-heading">
+                        <span class="section-label">1 · REQUEST</span>
+                        <h2 data-i18n="formTitle">Detail Tool</h2>
+                    </div>
+
+                    <div class="request-form-grid">
+                        <div class="request-field request-field-full">
+                            <label for="toolName" data-i18n="toolName">Nama tool yang diminta</label>
+                            <input id="toolName" name="toolName" required maxlength="80" placeholder="Contoh: Marine Fuel Density Calculator">
+                        </div>
+
+                        <div class="request-field">
+                            <label for="category" data-i18n="category">Kategori</label>
+                            <select id="category" name="category" required>
+                                <option value="Calculator">Calculator</option>
+                                <option value="Converter">Converter</option>
+                                <option value="Text">Text</option>
+                                <option value="Image">Image</option>
+                                <option value="Developer">Developer</option>
+                                <option value="Generator">Generator</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Engineering">Engineering</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="request-field">
+                            <label for="tier" data-i18n="tier">Perkiraan tingkat</label>
+                            <select id="tier" name="tier" required>
+                                <option value="simple">Simple — Rp49.000</option>
+                                <option value="standard" selected>Standard — Rp99.000</option>
+                                <option value="advanced">Advanced — Rp199.000</option>
+                                <option value="custom">Custom — review dahulu</option>
+                            </select>
+                        </div>
+
+                        <div class="request-field request-field-full">
+                            <label for="description" data-i18n="description">Apa yang harus dilakukan tool ini?</label>
+                            <textarea id="description" name="description" required maxlength="1400" placeholder="Jelaskan fungsi, masalah yang ingin diselesaikan, dan siapa yang akan menggunakannya."></textarea>
+                        </div>
+
+                        <div class="request-field request-field-full">
+                            <label for="inputs" data-i18n="inputs">Input yang dibutuhkan</label>
+                            <textarea id="inputs" name="inputs" maxlength="700" placeholder="Contoh: density @ observed temperature, temperature, API gravity..."></textarea>
+                        </div>
+
+                        <div class="request-field request-field-full">
+                            <label for="output" data-i18n="output">Output / contoh hasil yang diharapkan</label>
+                            <textarea id="output" name="output" maxlength="700" placeholder="Contoh: density @15°C, kg/L, formula yang dipakai..."></textarea>
+                        </div>
+
+                        <div class="request-field">
+                            <label for="alias" data-i18n="alias">Nama / alias (opsional)</label>
+                            <input id="alias" name="alias" maxlength="60" autocomplete="nickname" placeholder="Nama panggilan">
+                        </div>
+
+                        <div class="request-field">
+                            <label for="language" data-i18n="language">Bahasa utama</label>
+                            <select id="language" name="language">
+                                <option value="ID + EN">ID + EN</option>
+                                <option value="English">English</option>
+                                <option value="Indonesia">Indonesia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label class="request-check">
+                        <input id="publicConsent" type="checkbox" required>
+                        <span data-i18n="publicConsent">Saya memahami bahwa biaya Priority Request adalah biaya prioritas pengembangan, bukan pembelian hak eksklusif. Tool yang selesai dapat dirilis gratis untuk publik di AREStyx.</span>
+                    </label>
+
+                    <label class="request-check">
+                        <input id="safeConsent" type="checkbox" required>
+                        <span data-i18n="safeConsent">Saya tidak akan mengirim password, nomor kartu, data rekening, dokumen identitas, atau informasi sensitif melalui request publik.</span>
+                    </label>
+
+                    <div class="request-actions">
+                        <button class="button button-primary" type="submit" data-i18n="generate">Buat Request ID</button>
+                        <button class="button button-secondary" id="resetRequest" type="button" data-i18n="reset">Reset</button>
+                    </div>
+                </form>
+
+                <aside class="request-side">
+                    <div class="request-panel price-panel">
+                        <span class="section-label">PRIORITY PRICE</span>
+                        <h2 data-i18n="priceTitle">Harga Prioritas</h2>
+                        <div class="price-list">
+                            <div><strong>Simple</strong><span>Rp49.000</span><small data-i18n="simpleHelp">Rumus / utilitas kecil, 1 alur utama.</small></div>
+                            <div class="featured"><strong>Standard</strong><span>Rp99.000</span><small data-i18n="standardHelp">Beberapa input, validasi, hasil rinci.</small></div>
+                            <div><strong>Advanced</strong><span>Rp199.000</span><small data-i18n="advancedHelp">Logika lebih kompleks / multi-mode.</small></div>
+                            <div><strong>Custom</strong><span data-i18n="quote">Quote</span><small data-i18n="customHelp">Server/API, akun, file kompleks, atau scope besar.</small></div>
+                        </div>
+                        <p class="request-note" data-i18n="pricingNote">Harga di form adalah estimasi. Jangan membayar sebelum request disetujui. AREStyx dapat menaikkan/menurunkan tier setelah scope ditinjau.</p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        <section class="section" id="requestResult" hidden>
+            <div class="container request-layout">
+                <div class="request-panel">
+                    <span class="section-label">2 · TICKET</span>
+                    <h2 data-i18n="ticketTitle">Request Siap Dikirim</h2>
+                    <div class="request-ticket-meta">
+                        <div><span>Request ID</span><strong id="requestId">-</strong></div>
+                        <div><span data-i18n="selectedTier">Tier</span><strong id="ticketTier">-</strong></div>
+                        <div><span data-i18n="estimatedPrice">Estimasi</span><strong id="ticketPrice">-</strong></div>
+                    </div>
+                    <textarea id="requestSummary" class="request-summary" readonly></textarea>
+                    <div class="request-actions">
+                        <button id="copySummary" class="button button-primary" type="button" data-i18n="copy">Salin Request</button>
+                        <button id="downloadSummary" class="button button-secondary" type="button" data-i18n="download">Unduh TXT</button>
+                        <button id="shareSummary" class="button button-secondary" type="button" data-i18n="share">Bagikan</button>
+                        <a id="githubIssue" class="button button-secondary" target="_blank" rel="noopener noreferrer" data-i18n="github">Kirim via GitHub</a>
+                    </div>
+                    <p class="request-note" data-i18n="ticketNote">Kirim request terlebih dahulu. Bukti pembayaran, nomor transaksi, nomor rekening, atau data sensitif jangan diposting di GitHub Issue publik.</p>
+                </div>
+
+                <div class="request-panel payment-panel">
+                    <span class="section-label">3 · PAYMENT AFTER APPROVAL</span>
+                    <h2 data-i18n="paymentTitle">Bayar Setelah Disetujui</h2>
+                    <label class="request-check approval-check">
+                        <input id="approvedCheck" type="checkbox">
+                        <span data-i18n="approvedCheck">Saya sudah menerima persetujuan untuk request dan tier ini.</span>
+                    </label>
+                    <div id="paymentLocked" class="payment-locked" data-i18n="paymentLocked">Pembayaran dikunci sampai kamu menandai bahwa request sudah disetujui.</div>
+                    <div id="paymentContent" hidden>
+                        <div class="payment-amount">
+                            <span data-i18n="payExact">Bayar nominal tepat</span>
+                            <strong id="exactAmount">-</strong>
+                            <small data-i18n="verificationHelp">Tiga digit terakhir adalah kode verifikasi untuk membantu pencocokan transaksi secara manual.</small>
+                        </div>
+                        <figure class="payment-qr">
+                            <img src="assets/dana-business-qris.jpg" alt="QRIS DANA Bisnis AREStyx" width="1091" height="1536" loading="lazy" decoding="async">
+                            <figcaption data-i18n="scanQris">Scan QRIS menggunakan aplikasi pembayaran yang mendukung QRIS.</figcaption>
+                        </figure>
+                        <div class="payment-code-row">
+                            <span data-i18n="verificationCode">Kode verifikasi</span>
+                            <strong id="verificationCode">-</strong>
+                        </div>
+                        <p class="request-warning" data-i18n="manualVerify">Status pembayaran tidak berubah otomatis. Pemilik AREStyx harus mencocokkan nominal, waktu transaksi, dan Request ID sebelum pengembangan dimulai.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section request-terms">
+            <div class="container request-panel">
+                <span class="section-label">RULES</span>
+                <h2 data-i18n="rulesTitle">Aturan Priority Request</h2>
+                <div class="rules-grid">
+                    <p data-i18n="rule1"><strong>Review dulu.</strong> Permintaan yang tidak realistis, melanggar hukum/kebijakan, atau membutuhkan akses data sensitif dapat ditolak.</p>
+                    <p data-i18n="rule2"><strong>Tidak eksklusif.</strong> Kecuali ada kesepakatan custom terpisah, tool yang dibuat menjadi bagian AREStyx dan dapat digunakan publik.</p>
+                    <p data-i18n="rule3"><strong>Scope terkunci.</strong> Perubahan besar setelah pekerjaan dimulai dapat dinilai sebagai request baru atau upgrade tier.</p>
+                    <p data-i18n="rule4"><strong>Keamanan.</strong> Jangan kirim kredensial, API key, kartu, rekening, atau dokumen identitas pada form/issue publik.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container request-footer">
+            <span>AREStyx · FREE ONLINE TOOLS</span>
+            <span>Powered by ARESTER GROUP</span>
+        </div>
+    </footer>
+
+    <script src="request-tool.js"></script>
+    <script src="pwa.js"></script>
+</body>
+</html>
