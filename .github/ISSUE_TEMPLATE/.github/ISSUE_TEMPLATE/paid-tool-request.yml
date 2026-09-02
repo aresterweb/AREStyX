@@ -1,0 +1,75 @@
+name: Paid Tool Request
+about: Propose a new AREStyx tool for review before Priority payment.
+title: "[Paid Tool Request] ARX- - "
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## AREStyx Tool Request
+        Submit the scope first. **Do not post payment proof, card/bank details, passwords, API keys, identity documents, or other sensitive data.**
+  - type: input
+    id: request_id
+    attributes:
+      label: Request ID
+      placeholder: ARX-YYMMDD-XXXXXX
+    validations:
+      required: true
+  - type: input
+    id: tool_name
+    attributes:
+      label: Tool name
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options:
+        - Calculator
+        - Converter
+        - Text
+        - Image
+        - Developer
+        - Generator
+        - Finance
+        - Engineering
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Estimated tier
+      description: Final tier is confirmed after scope review. Do not pay yet.
+      options:
+        - Simple — Rp49.000
+        - Standard — Rp99.000
+        - Advanced — Rp199.000
+        - Custom — quote required
+    validations:
+      required: true
+  - type: textarea
+    id: function
+    attributes:
+      label: Function / scope
+      description: Explain what the tool must do.
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Inputs
+  - type: textarea
+    id: outputs
+    attributes:
+      label: Expected output / example
+  - type: checkboxes
+    id: agreement
+    attributes:
+      label: Agreement
+      options:
+        - label: I understand that Priority payment buys development priority, not exclusive ownership, unless a separate custom agreement says otherwise.
+          required: true
+        - label: I have not included sensitive financial, identity, credential, or secret information in this issue.
+          required: true
