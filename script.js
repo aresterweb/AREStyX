@@ -78,6 +78,9 @@ const pageTextTranslations =
         "Donasi":
             "Donate",
 
+        "Minta Tool Baru":
+            "Request a Tool",
+
         "Semua Tools Yang Kamu Butuhkan":
             "All the Tools You Need",
 

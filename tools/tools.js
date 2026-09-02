@@ -962,6 +962,87 @@ const toolTextTranslations =
         "JWT tidak valid.":
             "Invalid JWT.",
 
+        "Daftar resistansi (Ω)":
+            "Resistance list (Ω)",
+
+        "Nilai tidak boleh negatif.":
+            "Values cannot be negative.",
+
+        "Resistansi tidak boleh negatif.":
+            "Resistance values cannot be negative.",
+
+        "Cabang 0 Ω membuat resistansi ekuivalen 0 Ω.":
+            "A 0 Ω branch makes the equivalent resistance 0 Ω.",
+
+        "Daftar resistansi tidak valid.":
+            "Invalid resistance list.",
+
+        "R1 + R2 harus lebih besar dari 0.":
+            "R1 + R2 must be greater than 0.",
+
+        "Periksa kapasitas, arus beban, dan efisiensi.":
+            "Check the capacity, load current, and efficiency.",
+
+        "Estimasi sederhana; karakteristik baterai, suhu, umur, C-rate, dan inverter dapat mengubah runtime aktual.":
+            "Simplified estimate; battery characteristics, temperature, age, C-rate, and inverter can affect actual runtime.",
+
+        "Lilitan primer (N1)":
+            "Primary turns (N1)",
+
+        "Lilitan sekunder (N2)":
+            "Secondary turns (N2)",
+
+        "Jumlah lilitan tidak valid.":
+            "Invalid number of turns.",
+
+        "Frekuensi → Periode":
+            "Frequency → Period",
+
+        "Periode → Frekuensi":
+            "Period → Frequency",
+
+        "Nilai harus lebih besar dari 0.":
+            "Value must be greater than 0.",
+
+        "Daya harus ≥ 0 dan RPM harus > 0.":
+            "Power must be ≥ 0 and RPM must be > 0.",
+
+        "Nilai gear dan RPM tidak valid.":
+            "Invalid gear and RPM values.",
+
+        "Diameter pipa (mm)":
+            "Pipe diameter (mm)",
+
+        "Debit harus ≥ 0 dan diameter harus > 0.":
+            "Flow rate must be ≥ 0 and diameter must be > 0.",
+
+        "Densitas (kg/m³)":
+            "Density (kg/m³)",
+
+        "Viskositas dinamis (Pa·s)":
+            "Dynamic viscosity (Pa·s)",
+
+        "Batas regime bergantung pada geometri dan kondisi aliran; nilai 2300/4000 adalah pedoman umum untuk aliran internal pipa.":
+            "Flow regime boundaries depend on geometry and flow conditions; 2300/4000 are general guidelines for internal pipe flow.",
+
+        "Tekanan harus ≥ 0 dan densitas harus > 0.":
+            "Pressure must be ≥ 0 and density must be > 0.",
+
+        "Densitas tidak boleh negatif.":
+            "Density cannot be negative.",
+
+        "API gravity berada di luar rentang formula.":
+            "API gravity is outside the formula range.",
+
+        "Konversi standar menggunakan referensi petroleum 60°F; densitas yang ditampilkan adalah perkiraan dari SG.":
+            "Standard conversion using the petroleum reference at 60°F; the displayed density is estimated from SG.",
+
+        "Apparent slip sederhana; arus, wake, pitch efektif, dan kondisi kapal dapat memengaruhi hasil.":
+            "Simplified apparent slip; current, wake, effective pitch, and vessel conditions can affect the result.",
+
+        "Bore, stroke, dan silinder harus > 0.":
+            "Bore, stroke, and cylinder count must be > 0.",
+
         "Signature tidak diverifikasi.":
             "The signature is not verified."
 
@@ -1047,7 +1128,13 @@ const toolPhraseTranslations = [
     [/\borang\b/g, "person"],
     [/\bdata\b/g, "data"],
     [/belum tersedia pada versi AREStyx ini\./g, "is not available in this AREStyx version."],
-    [/% dari /g, "% of "]
+    [/% dari /g, "% of "],
+    [/\bperkiraan regime\b/g, "estimated regime"],
+    [/\btransisi\b/g, "transitional"],
+    [/\bturbulen\b/g, "turbulent"],
+    [/\bestimasi ideal dengan faktor efisiensi\b/g, "ideal estimate with efficiency factor"],
+    [/\bapparent slip sederhana\b/g, "simplified apparent slip"],
+    [/\bcc\/silinder\b/g, "cc/cylinder"]
 
 ];
 

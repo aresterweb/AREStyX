@@ -1,0 +1,66 @@
+.request-page { position: relative; z-index: 1; padding-top: 88px; }
+.request-hero { padding: 72px 0 28px; }
+.request-hero-grid, .request-layout { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, .65fr); gap: 24px; align-items: start; }
+.request-hero h1 { margin: 12px 0 18px; font-size: clamp(2.1rem, 6vw, 4.8rem); line-height: .98; max-width: 780px; }
+.request-hero p { max-width: 760px; color: var(--text-secondary, #9db2c9); line-height: 1.75; }
+.request-badges { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.request-badges span { border: 1px solid rgba(60,220,255,.24); background: rgba(5,25,45,.72); border-radius: 999px; padding: 9px 12px; font-size: .86rem; color: #bfefff; }
+.request-flow-card, .request-panel { border: 1px solid rgba(75,215,255,.17); background: linear-gradient(180deg, rgba(8,27,48,.92), rgba(4,16,31,.9)); box-shadow: 0 18px 60px rgba(0,0,0,.22); border-radius: 22px; }
+.request-flow-card { padding: 24px; }
+.request-flow-card strong { color: #dffaff; font-size: 1.05rem; }
+.request-flow-card ol { margin: 16px 0 0 20px; padding: 0; color: #9db2c9; line-height: 1.7; }
+.request-panel { padding: clamp(20px, 4vw, 32px); }
+.request-panel-heading h2, .request-panel h2 { margin: 8px 0 22px; }
+.request-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.request-field { display: flex; flex-direction: column; gap: 8px; }
+.request-field-full { grid-column: 1 / -1; }
+.request-field label { font-size: .88rem; color: #cce7f5; font-weight: 700; }
+.request-field input, .request-field select, .request-field textarea, .request-summary { width: 100%; border: 1px solid rgba(100,218,255,.19); background: rgba(1,10,23,.72); color: #e8f8ff; border-radius: 12px; padding: 13px 14px; outline: none; font: inherit; }
+.request-field input:focus, .request-field select:focus, .request-field textarea:focus, .request-summary:focus { border-color: rgba(62,225,255,.7); box-shadow: 0 0 0 3px rgba(62,225,255,.08); }
+.request-field textarea { min-height: 116px; resize: vertical; }
+.request-check { display: flex; gap: 11px; align-items: flex-start; margin-top: 18px; color: #a8bdcc; line-height: 1.55; font-size: .88rem; }
+.request-check input { margin-top: 4px; accent-color: #25d9ff; }
+.request-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.request-side { position: sticky; top: 104px; }
+.price-list { display: grid; gap: 10px; }
+.price-list > div { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; border: 1px solid rgba(100,218,255,.12); border-radius: 14px; padding: 14px; background: rgba(2,15,29,.6); }
+.price-list > div.featured { border-color: rgba(37,217,255,.52); box-shadow: inset 0 0 32px rgba(37,217,255,.06); }
+.price-list span { color: #69e8ff; font-weight: 800; }
+.price-list small { grid-column: 1 / -1; color: #829bae; }
+.request-note { margin: 16px 0 0; color: #8199aa; line-height: 1.6; font-size: .86rem; }
+.request-ticket-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+.request-ticket-meta > div { padding: 12px; border-radius: 12px; background: rgba(0,13,27,.64); border: 1px solid rgba(89,220,255,.13); }
+.request-ticket-meta span { display: block; font-size: .72rem; color: #7f98ab; text-transform: uppercase; letter-spacing: .08em; }
+.request-ticket-meta strong { display: block; margin-top: 5px; color: #d9f7ff; overflow-wrap: anywhere; }
+.request-summary { min-height: 330px; resize: vertical; line-height: 1.5; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .84rem; }
+.approval-check { margin-top: 0; margin-bottom: 16px; }
+.payment-locked { border: 1px dashed rgba(255,196,92,.35); background: rgba(71,47,5,.16); color: #f3c979; padding: 16px; border-radius: 14px; line-height: 1.55; }
+.payment-amount { text-align: center; border: 1px solid rgba(42,220,255,.2); background: rgba(0,25,40,.6); border-radius: 16px; padding: 18px; }
+.payment-amount span, .payment-amount small { display: block; color: #8ba7b9; }
+.payment-amount strong { display: block; margin: 7px 0; font-size: clamp(1.8rem, 5vw, 2.7rem); color: #64e7ff; letter-spacing: -.03em; }
+.payment-qr { margin: 18px auto; max-width: 310px; }
+.payment-qr img { display: block; width: 100%; height: auto; border-radius: 18px; border: 1px solid rgba(88,220,255,.2); }
+.payment-qr figcaption { margin-top: 9px; text-align: center; color: #8099aa; font-size: .8rem; line-height: 1.5; }
+.payment-code-row { display: flex; justify-content: space-between; gap: 16px; padding: 13px 0; border-top: 1px solid rgba(100,218,255,.12); border-bottom: 1px solid rgba(100,218,255,.12); color: #8ca4b5; }
+.payment-code-row strong { color: #dffaff; letter-spacing: .12em; }
+.request-warning { color: #e5b96f; font-size: .82rem; line-height: 1.55; }
+.rules-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+.rules-grid p { margin: 0; padding: 16px; border-radius: 14px; background: rgba(1,13,26,.58); color: #94abba; line-height: 1.65; }
+.rules-grid strong { color: #d9f7ff; }
+.request-header-actions { display: flex; align-items: center; gap: 10px; }
+.request-footer { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; color: #728b9d; }
+.request-field .field-error { border-color: rgba(255,90,90,.7); }
+.request-toast { position: fixed; right: 16px; bottom: 16px; z-index: 99; max-width: 360px; padding: 13px 16px; border: 1px solid rgba(91,225,255,.3); border-radius: 12px; background: rgba(3,20,36,.96); color: #dffaff; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+@media (max-width: 900px) {
+    .request-hero-grid, .request-layout { grid-template-columns: 1fr; }
+    .request-side { position: static; }
+}
+@media (max-width: 620px) {
+    .request-page { padding-top: 76px; }
+    .request-hero { padding-top: 44px; }
+    .request-form-grid, .rules-grid { grid-template-columns: 1fr; }
+    .request-field-full { grid-column: auto; }
+    .request-ticket-meta { grid-template-columns: 1fr; }
+    .request-header-actions .button { display: none; }
+    .request-panel { border-radius: 16px; }
+}

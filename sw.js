@@ -1,7 +1,7 @@
 /* AREStyx offline service worker */
 "use strict";
 
-const CACHE = "arestyx-static-v7-seo-pages-20260831";
+const CACHE = "arestyx-static-v8-paid-request-20260902";
 
 const APP_SHELL = [
     "./",
@@ -17,6 +17,9 @@ const APP_SHELL = [
     "./favicon.png",
     "./assets/arester-group-official.png",
     "./assets/dana-business-qris.jpg",
+    "./request-tool.html",
+    "./request-tool.css",
+    "./request-tool.js",
     "./tools/tools.html",
     "./tools/tools.css",
     "./tools/tools-extra.js",
