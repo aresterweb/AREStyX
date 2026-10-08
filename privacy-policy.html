@@ -32,7 +32,7 @@
 .legal-content h1 {
     font-family: Inter, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(2rem, 7vw, 3.25rem);
+    font-size: clamp(1.75rem, 5vw, 2.55rem);
     line-height: 1.08;
     letter-spacing: -0.045em;
     font-weight: 800;
@@ -42,7 +42,7 @@
 .legal-content h2 {
     font-family: Inter, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(1.22rem, 4.5vw, 1.55rem);
+    font-size: clamp(1.12rem, 3.5vw, 1.35rem);
     line-height: 1.3;
     letter-spacing: -0.025em;
     font-weight: 750;
@@ -53,10 +53,18 @@
 .legal-content li {
     font-family: Inter, -apple-system, BlinkMacSystemFont,
         "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(0.96rem, 2.7vw, 1.04rem);
-    line-height: 1.78;
+    font-size: clamp(0.92rem, 2.2vw, 0.98rem);
+    line-height: 1.72;
     font-weight: 400;
     letter-spacing: -0.005em;
+}
+
+.legal-content p {
+    margin: 0 0 18px;
+}
+
+.legal-content li {
+    margin-bottom: 8px;
 }
 
 .legal-content ul,
@@ -80,19 +88,19 @@
     }
 
     .legal-content h1 {
-        font-size: 2.05rem;
+        font-size: 1.75rem;
         letter-spacing: -0.04em;
     }
 
     .legal-content h2 {
-        font-size: 1.28rem;
+        font-size: 1.15rem;
         margin-top: 32px;
     }
 
     .legal-content p,
     .legal-content li {
-        font-size: 0.98rem;
-        line-height: 1.72;
+        font-size: 0.94rem;
+        line-height: 1.68;
     }
 }
 </style>
@@ -375,25 +383,35 @@
 </footer>
 
 <script>
-const btn=document.getElementById("languageButton");
-const saved=localStorage.getItem("arestyx-language");
+const btn = document.getElementById("languageButton");
 
-if(saved==="en") document.body.classList.add("english");
+function applyLanguage(lang) {
+    const en = lang === "en";
 
-function updateLanguage(){
-const en=document.body.classList.contains("english");
-document.documentElement.lang=en?"en":"id";
-btn.textContent=en?"ID":"EN";
-btn.setAttribute("aria-label",en?"Ganti bahasa":"Change language");
-localStorage.setItem("arestyx-language",en?"en":"id");
+    document.body.classList.toggle("english", en);
+    document.documentElement.lang = en ? "en" : "id";
+
+    if (btn) {
+        btn.textContent = en ? "ID" : "EN";
+        btn.setAttribute(
+            "aria-label",
+            en ? "Ganti bahasa" : "Change language"
+        );
+    }
 }
 
-btn.addEventListener("click",()=>{
-document.body.classList.toggle("english");
-updateLanguage();
-});
+const savedLanguage = localStorage.getItem("arestyx-language");
+applyLanguage(savedLanguage === "en" ? "en" : "id");
 
-updateLanguage();
+if (btn) {
+    btn.addEventListener("click", () => {
+        const current = document.body.classList.contains("english");
+        const nextLanguage = current ? "id" : "en";
+
+        localStorage.setItem("arestyx-language", nextLanguage);
+        applyLanguage(nextLanguage);
+    });
+}
 </script>
 </body>
 </html>
