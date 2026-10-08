@@ -117,4 +117,8 @@
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
+  <url><loc>https://are-sty-x.vercel.app/privacy-policy.html</loc><lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://are-sty-x.vercel.app/terms.html</loc><lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://are-sty-x.vercel.app/cookie-policy.html</loc><lastmod>2026-10-08</lastmod><changefreq>yearly</changefreq><priority>0.5</priority></url>
+  <url><loc>https://are-sty-x.vercel.app/contact.html</loc><lastmod>2026-10-08</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

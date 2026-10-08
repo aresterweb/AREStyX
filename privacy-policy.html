@@ -13,107 +13,9 @@
 <link rel="alternate" hreflang="x-default" href="https://are-sty-x.vercel.app/privacy-policy.html">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="stylesheet" href="style.css">
-
-<style>
-/* =========================================================
-   AREStyx Privacy Policy
-   Typography scoped khusus halaman legal
-   ========================================================= */
-
-.legal-page {
-    padding: 48px 20px 88px;
-}
-
-.legal-content {
-    width: min(900px, 100%);
-    margin: 0 auto;
-}
-
-.legal-content h1 {
-    font-family: Inter, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(1.75rem, 5vw, 2.55rem);
-    line-height: 1.08;
-    letter-spacing: -0.045em;
-    font-weight: 800;
-    margin: 0 0 12px;
-}
-
-.legal-content h2 {
-    font-family: Inter, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(1.12rem, 3.5vw, 1.35rem);
-    line-height: 1.3;
-    letter-spacing: -0.025em;
-    font-weight: 750;
-    margin: 38px 0 10px;
-}
-
-.legal-content p,
-.legal-content li {
-    font-family: Inter, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: clamp(0.92rem, 2.2vw, 0.98rem);
-    line-height: 1.72;
-    font-weight: 400;
-    letter-spacing: -0.005em;
-}
-
-.legal-content p {
-    margin: 0 0 18px;
-}
-
-.legal-content li {
-    margin-bottom: 8px;
-}
-
-.legal-content ul,
-.legal-content ol {
-    padding-left: 1.3rem;
-}
-
-.legal-updated {
-    font-family: Inter, -apple-system, BlinkMacSystemFont,
-        "Segoe UI", Roboto, Arial, sans-serif;
-    font-size: 0.9rem !important;
-    line-height: 1.5 !important;
-    font-weight: 500 !important;
-    opacity: .65;
-    margin-bottom: 30px;
-}
-
-@media (max-width: 600px) {
-    .legal-page {
-        padding: 34px 18px 70px;
-    }
-
-    .legal-content h1 {
-        font-size: 1.75rem;
-        letter-spacing: -0.04em;
-    }
-
-    .legal-content h2 {
-        font-size: 1.15rem;
-        margin-top: 32px;
-    }
-
-    .legal-content p,
-    .legal-content li {
-        font-size: 0.94rem;
-        line-height: 1.68;
-    }
-}
+<link rel="stylesheet" href="legal.css">
 
 
-
-
-[data-lang="en"] { display: none; }
-body.english [data-lang="id"] { display: none; }
-body.english [data-lang="en"] { display: block; }
-body.english li[data-lang="en"] { display: list-item; }
-body.english span[data-lang="en"] { display: inline; }
-
-</style>
 
 </head>
 
@@ -333,7 +235,7 @@ body.english span[data-lang="en"] { display: inline; }
 <p>Kebijakan ini dapat diperbarui dari waktu ke waktu. Perubahan akan dipublikasikan pada halaman ini dengan tanggal pembaruan terbaru.</p>
 
 <h2>14. Kontak</h2>
-<p>Untuk pertanyaan mengenai privasi, silakan gunakan informasi kontak resmi AREStyx yang tercantum pada halaman Contact.</p>
+<p>Untuk pertanyaan mengenai privasi, silakan hubungi AREStyx melalui halaman Contact atau kontak resmi yang tersedia di halaman tersebut.</p>
 </div>
 
 <div data-lang="en">
@@ -380,7 +282,7 @@ body.english span[data-lang="en"] { display: inline; }
 <p>This policy may be updated from time to time. Changes will be published on this page with the latest update date.</p>
 
 <h2>14. Contact</h2>
-<p>For privacy questions, please use the official AREStyx contact information listed on the Contact page.</p>
+<p>For privacy questions, please contact AREStyx through the Contact page or the official contact details listed there.</p>
 </div>
 
 </div>
@@ -392,36 +294,6 @@ body.english span[data-lang="en"] { display: inline; }
 </div>
 </footer>
 
-<script>
-const btn = document.getElementById("languageButton");
-
-function applyLanguage(lang) {
-    const en = lang === "en";
-
-    document.body.classList.toggle("english", en);
-    document.documentElement.lang = en ? "en" : "id";
-
-    if (btn) {
-        btn.textContent = en ? "ID" : "EN";
-        btn.setAttribute(
-            "aria-label",
-            en ? "Ganti bahasa" : "Change language"
-        );
-    }
-}
-
-const savedLanguage = localStorage.getItem("arestyx-language");
-applyLanguage(savedLanguage === "en" ? "en" : "id");
-
-if (btn) {
-    btn.addEventListener("click", () => {
-        const current = document.body.classList.contains("english");
-        const nextLanguage = current ? "id" : "en";
-
-        localStorage.setItem("arestyx-language", nextLanguage);
-        applyLanguage(nextLanguage);
-    });
-}
-</script>
+<script src="legal.js" defer></script>
 </body>
 </html>
