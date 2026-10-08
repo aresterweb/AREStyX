@@ -13,41 +13,260 @@
 <link rel="alternate" hreflang="x-default" href="https://are-sty-x.vercel.app/privacy-policy.html">
 <link rel="icon" type="image/png" href="assets/favicon.png">
 <link rel="stylesheet" href="style.css">
+
 <style>
-.legal-page{padding:50px 0 80px}
-.legal-content{max-width:900px;margin:auto}
-.legal-content h1{margin-bottom:10px}
-.legal-content h2{margin-top:34px}
-.legal-content p,.legal-content li{line-height:1.75}
-.legal-updated{opacity:.7}
-[data-lang="en"]{display:none}
-body.english [data-lang="id"]{display:none}
-body.english [data-lang="en"]{display:block}
-body.english li[data-lang="en"]{display:list-item}
-body.english span[data-lang="en"]{display:inline}
+/* =========================================================
+   AREStyx Privacy Policy
+   Typography scoped khusus halaman legal
+   ========================================================= */
+
+.legal-page {
+    padding: 48px 20px 88px;
+}
+
+.legal-content {
+    width: min(900px, 100%);
+    margin: 0 auto;
+}
+
+.legal-content h1 {
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(2rem, 7vw, 3.25rem);
+    line-height: 1.08;
+    letter-spacing: -0.045em;
+    font-weight: 800;
+    margin: 0 0 12px;
+}
+
+.legal-content h2 {
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(1.22rem, 4.5vw, 1.55rem);
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+    font-weight: 750;
+    margin: 38px 0 10px;
+}
+
+.legal-content p,
+.legal-content li {
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: clamp(0.96rem, 2.7vw, 1.04rem);
+    line-height: 1.78;
+    font-weight: 400;
+    letter-spacing: -0.005em;
+}
+
+.legal-content ul,
+.legal-content ol {
+    padding-left: 1.3rem;
+}
+
+.legal-updated {
+    font-family: Inter, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 0.9rem !important;
+    line-height: 1.5 !important;
+    font-weight: 500 !important;
+    opacity: .65;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 600px) {
+    .legal-page {
+        padding: 34px 18px 70px;
+    }
+
+    .legal-content h1 {
+        font-size: 2.05rem;
+        letter-spacing: -0.04em;
+    }
+
+    .legal-content h2 {
+        font-size: 1.28rem;
+        margin-top: 32px;
+    }
+
+    .legal-content p,
+    .legal-content li {
+        font-size: 0.98rem;
+        line-height: 1.72;
+    }
+}
 </style>
+
 </head>
 
 <body>
-<header class="site-header">
-<div class="container">
-<a href="index.html" class="brand">
-<img src="assets/favicon.png" width="48" height="48" class="brand-logo" alt="AREStyx">
-<div class="brand-text">
-<span class="brand-name">AREStyx</span>
-<span class="brand-tagline">FREE ONLINE TOOLS</span>
-</div>
-</a>
+<header
+        class="header"
+        id="header"
+    >
 
-<div style="display:flex;align-items:center;gap:12px">
-<button id="languageButton" class="button button-secondary language-button" type="button" aria-label="Change language">EN</button>
-<a href="index.html#allTools" class="button button-secondary">
-<span data-lang="id">Semua Tools</span>
-<span data-lang="en">All Tools</span>
-</a>
-</div>
-</div>
-</header>
+        <div class="container header-container">
+
+
+            <!-- BRAND -->
+
+            <a
+                href="index.html#home"
+                class="brand"
+                aria-label="AREStyx Home"
+            >
+
+                <img
+                    src="assets/arestyx-logo-192.png"
+                    alt="AREStyx Logo"
+                    width="192"
+                    height="192"
+                    class="brand-logo"
+                >
+
+                <div class="brand-text">
+
+                    <span class="brand-name">
+                        AREStyx
+                    </span>
+
+                    <span class="brand-tagline">
+                        FREE ONLINE TOOLS
+                    </span>
+
+                </div>
+
+            </a>
+
+
+            <!-- DESKTOP NAVIGATION -->
+
+            <nav
+                class="desktop-nav"
+                id="desktopNav"
+                aria-label="Main Navigation"
+            >
+
+                <a
+                    href="index.html#home"
+                    class="nav-link active"
+                >
+                    Home
+                </a>
+
+                <a
+                    href="index.html#tools"
+                    class="nav-link"
+                >
+                    Tools
+                </a>
+
+                <a
+                    href="index.html#categories"
+                    class="nav-link"
+                >
+                    Categories
+                </a>
+
+                <a
+                    href="request-tool.html"
+                    class="nav-link"
+                >
+                    Minta Tool Baru
+                </a>
+
+                <a
+                    href="index.html#about"
+                    class="nav-link"
+                >
+                    About
+                </a>
+
+                <a
+                    href="index.html#donation"
+                    class="nav-link"
+                >
+                    Donasi
+                </a>
+
+            </nav>
+
+
+            <!-- HEADER ACTIONS -->
+
+            <div class="header-actions">
+
+                <button
+                    id="languageButton"
+                    class="language-button"
+                    type="button"
+                    aria-label="Change language"
+                >
+                    ID
+                </button>
+
+
+                <button
+                    id="menuButton"
+                    class="menu-button"
+                    type="button"
+                    aria-label="Open navigation menu"
+                    aria-expanded="false"
+                    aria-controls="mobileMenu"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- MOBILE MENU -->
+
+        <nav
+            class="mobile-menu"
+            id="mobileMenu"
+            aria-label="Mobile Navigation"
+        >
+
+            <a href="index.html#home">
+                Home
+            </a>
+
+            <a href="index.html#tools">
+                Tools
+            </a>
+
+            <a href="index.html#categories">
+                Categories
+            </a>
+
+            <a href="request-tool.html">
+
+
+                Minta Tool Baru
+
+
+            </a>
+
+
+
+            <a href="index.html#about">
+                About
+            </a>
+
+            <a href="index.html#donation">
+                Donasi
+            </a>
+
+        </nav>
+
+    </header>
 
 <main class="legal-page">
 <div class="container legal-content">
